@@ -139,4 +139,12 @@ public class SweetSwarm extends JFrame {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Instantiate and spawn the bees.
+     * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
+     */
+
+    protected void beeGenerator(){}
+
 }
