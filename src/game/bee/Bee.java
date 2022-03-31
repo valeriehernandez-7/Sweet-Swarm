@@ -23,24 +23,21 @@ public abstract class Bee {
      * @param beeStatus String
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
-    protected void setSprite(String beeName, String beeStatus) {
-        if (Objects.equals(beeName, "Collector") || Objects.equals(beeName, "Guard")) {
-            if (states.contains(beeStatus)) {
-                String source = "";
-                int stateIndex = states.indexOf(beeStatus);
-                if (stateIndex > 0 && stateIndex < 3) { // looking for resource or attacking state
-                    source = "src/resources/img/__bee-"+ beeName +"-0.png";
-                } else if (stateIndex == 3) { // collecting the resource state
-                    source = "src/resources/img/__bee-"+ beeName +"-1.png";
-                } else { // die
-                    source = "src/resources/img/__honeycomb-item.png";
-                }
-                sprite.setIcon(new ImageIcon(source));
-            } else {
-                System.out.println(beeStatus + " state is not a Bee state.");
+    protected void setStatus(String beeName, String beeStatus) {
+        if (states.contains(beeStatus)) {
+            String source = "";
+            int stateIndex = states.indexOf(beeStatus);
+            if (stateIndex > 0 && stateIndex < 3) { // looking for resource or attacking state
+                source = "src/resources/img/__bee-" + beeName + "-0.png";
+            } else if (stateIndex == 3) { // collecting the resource state
+                source = "src/resources/img/__bee-" + beeName + "-1.png";
+            } else { // die
+                source = "src/resources/img/__honeycomb-item.png";
             }
+            sprite.setIcon(new ImageIcon(source));
+            status = states.get(stateIndex);
         } else {
-            System.out.println(beeName + " class is not a Bee subclass.");
+            System.out.println(beeStatus + " state is not a Bee state.");
         }
     }
 

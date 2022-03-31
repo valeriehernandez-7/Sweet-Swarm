@@ -1,7 +1,5 @@
 package game.bee;
 
-import javax.swing.*;
-
 /**
  *
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
@@ -12,13 +10,12 @@ public class Guard extends Bee {
      * @param currentPosition int[][]
      * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
      */
-    public Guard(String beeName, int[][] currentPosition) {
+    public Guard(int[][] currentPosition) {
         this.health = 6;
         this.power = 2;
         this.position = currentPosition;
-        this.status = super.states.get(1);
-
-        super.setSprite(beeName,"looking");
+        this.status = this.states.get(1);
+        this.setStatus(this.getClass().getSimpleName(), this.status);
     }
 
     protected void controller() {}
