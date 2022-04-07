@@ -1,10 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Random;
 import javax.swing.*;
 
 /**
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
+ * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
 public class SweetSwarm extends JFrame implements ActionListener {
     // ui components
@@ -33,6 +35,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
+        System.out.println("⬢ \uD83D\uDC1D Sweet Swarm \uD83D\uDC1D ⬢");
         setIconImage(new ImageIcon("src/resources/img/__icon.png").getImage());
         setTitle("Sweet Swarm");
         setSize(800, 600);

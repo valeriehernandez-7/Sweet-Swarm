@@ -1,32 +1,62 @@
 package game.object;
 
 import javax.swing.*;
+import java.util.Random;
 
 /**
  *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
+ * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
 public class Object {
-    private JLabel sprite = new JLabel(); // bee image
-    private int health = 10;
-    private int points;
-    private int[] position = new int[2];
-    private boolean available = true;
+    protected JLabel sprite = new JLabel(); // object image
+    protected int resistance; // object resistance
+    protected int[] position = new int[2]; // object position
+    protected int points; // object score points
 
-    public void setSprite(String object) {
-        String source = "";
-        int imageInt = (int) (Math.random()*(3-1) + 1);
+    public int getResistance() {
+        return resistance;
+    }
 
-        if (object.equals("Resource")) { // it's a flower
-            //source = "src/resources/img/__object-resource-" + imageInt + ".png";     [esto funciona si le cambiamos los nombres a las iamgenes, asi nos evitamos hacer un if jsjs]
-        } else if (object.equals("Block")) { // it's block time
-            source = "src/resources/img/__object-block-1.png";
-        } else { // it's a threat
-            source = "src/resources/img/__object-threat-"+imageInt+".png";
+    public void setResistance(int resistance) {
+        this.resistance = resistance;
+    }
+
+    public int[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(int xPosition, int yPosition) {
+        this.position[0] = xPosition;
+        this.position[1] = yPosition;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public void setStatus(boolean available) {
+        String source;
+        if (available) {
+            // common state
+            if (!getClass().getSimpleName().equals("Block")) {
+                source = "src/resources/img/__object-" + getClass().getSimpleName() + "-" + getRandomInteger(1, 3) + ".png";
+            } else {
+                source = "src/resources/img/__object-" + getClass().getSimpleName() + "-1.png";
+            }
+        } else {
+            // destroyed or not available state
+            source = "src/resources/img/__null.png";
         }
         sprite.setIcon(new ImageIcon(source));
     }
 
-    public void destroy(){};
-
+    private int getRandomInteger(int origin, int bound) {
+        Random random = new Random();
+        return random.nextInt(origin, bound + 1);
+    }
 }
