@@ -32,8 +32,9 @@ public class App {
         // object testing
         Block invisible = new Block(2, 7, false);
         System.out.println("\n" + invisible.getClass().getSimpleName() +"\nPos: "+ Arrays.toString(invisible.getPosition()));
-//
-        Block b = new Block(2, 7, true);
+//        System.out.println(invisible.sprite.getIcon() + "\n");
+
+        Block b = new Block(2, 8, true);
         System.out.println("\n" + b.getClass().getSimpleName() +"\nPos: "+ Arrays.toString(b.getPosition()));
 //        System.out.println(b.sprite.getIcon() + "\n");
 

@@ -11,7 +11,7 @@ public class Collector extends Bee {
         this.setHealth(3);
         this.setPower(1);
         this.setPosition(xPosition, yPosition);
-        this.setStatus(this.states.get(1));
+        this.setStatus(this.getStates().get(1));
     }
 
     public void controller() {

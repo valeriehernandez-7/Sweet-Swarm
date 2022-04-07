@@ -11,7 +11,7 @@ public class Guard extends Bee {
         this.setHealth(6);
         this.setPower(2);
         this.setPosition(xPosition, yPosition);
-        this.setStatus(this.states.get(1));
+        this.setStatus(this.getStates().get(1));
     }
 
     public void controller() {
