@@ -3,6 +3,7 @@ package game.object;
 import javax.swing.ImageIcon;
 
 /**
+ *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  */
 public class Threat extends Object {
@@ -10,7 +11,7 @@ public class Threat extends Object {
     private int power;
 
     public Threat(int xPosition, int yPosition) {
-        this.id = getRandomInteger(1, 3);
+        this.id = this.getRandomInteger(1, 3);
         this.setPower(2);
         this.setResistance(10);
         this.setPosition(xPosition, yPosition);

@@ -1,8 +1,8 @@
 package game.bee;
 
-import game.honeycomb.Cell;
 import game.object.Resource;
 
+import java.awt.Point;
 import javax.swing.*;
 import java.util.*;
 
@@ -11,11 +11,12 @@ import java.util.*;
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
-public abstract class Bee extends Cell {
+public abstract class Bee {
     protected JLabel sprite = new JLabel(); // bee image
     protected int health; // bee health
     protected int power; // bee power
-    protected int[] target = new int[2]; // bee destination
+    protected Point position = new Point(); // bee position
+    protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
 
@@ -35,13 +36,22 @@ public abstract class Bee extends Cell {
         this.power = power;
     }
 
-    public int[] getTarget() {
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(int xPosition, int yPosition) {
+        this.position.x = xPosition;
+        this.position.y = yPosition;
+    }
+
+    public Point getTarget() {
         return target;
     }
 
-    public void setTarget(int xTarget, int yTarget) {
-        this.target[0] = xTarget;
-        this.target[1] = yTarget;
+    public void setTarget(int xPosition, int yPosition) {
+        this.target.x = xPosition;
+        this.target.y = yPosition;
     }
 
     public String getStatus() {

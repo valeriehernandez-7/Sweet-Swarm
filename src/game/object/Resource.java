@@ -10,7 +10,7 @@ public class Resource extends Object {
     private final int id;
 
     public Resource(int xPosition, int yPosition) {
-        this.id = getRandomInteger(1, 3);
+        this.id = this.getRandomInteger(1, 3);
         this.setResistance(2);
         this.setPosition(xPosition, yPosition);
         this.setPoints(100);
