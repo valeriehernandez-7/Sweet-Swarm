@@ -27,6 +27,6 @@ public class Resource extends Object {
             // destroyed or not available state
             source = "src/resources/img/__null.png";
         }
-        this.sprite.setIcon(new ImageIcon(source));
+        setIcon(new ImageIcon(source));
     }
 }

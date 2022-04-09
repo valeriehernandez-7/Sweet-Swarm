@@ -11,8 +11,7 @@ import java.util.*;
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
-public abstract class Bee {
-    protected JLabel sprite = new JLabel(); // bee image
+public abstract class Bee extends JLabel {
     protected int health; // bee health
     protected int power; // bee power
     protected Point position = new Point(); // bee position
@@ -71,7 +70,7 @@ public abstract class Bee {
             // die
             source = "src/resources/img/__null.png";
         }
-        sprite.setIcon(new ImageIcon(source));
+        setIcon(new ImageIcon(source));
         status = states.get(stateIndex);
     }
 
