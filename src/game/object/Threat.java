@@ -14,7 +14,7 @@ public class Threat extends Object {
         this.id = this.getRandomInteger(1, 3);
         this.setPower(2);
         this.setResistance(10);
-        this.setPosition(xPosition, yPosition);
+        this.setLocation(xPosition, yPosition);
         this.setPoints(1000);
         this.setStatus(true);
     }
@@ -38,5 +38,6 @@ public class Threat extends Object {
             source = "src/resources/img/__null.png";
         }
         setIcon(new ImageIcon(source));
+        setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 }

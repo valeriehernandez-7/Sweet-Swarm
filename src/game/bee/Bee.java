@@ -14,7 +14,6 @@ import java.util.*;
 public abstract class Bee extends JLabel {
     protected int health; // bee health
     protected int power; // bee power
-    protected Point position = new Point(); // bee position
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
@@ -33,15 +32,6 @@ public abstract class Bee extends JLabel {
 
     public void setPower(int power) {
         this.power = power;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(int xPosition, int yPosition) {
-        this.position.x = xPosition;
-        this.position.y = yPosition;
     }
 
     public Point getTarget() {
@@ -71,6 +61,7 @@ public abstract class Bee extends JLabel {
             source = "src/resources/img/__null.png";
         }
         setIcon(new ImageIcon(source));
+        setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
         status = states.get(stateIndex);
     }
 

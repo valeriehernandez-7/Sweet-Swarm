@@ -1,6 +1,5 @@
 package game.object;
 
-import java.awt.Point;
 import javax.swing.JLabel;
 import java.util.Random;
 
@@ -13,7 +12,6 @@ import java.util.Random;
 public abstract class Object extends JLabel {
     protected int resistance; // object resistance
     protected int points; // object score points
-    protected Point position = new Point(); // object position
 
     public int getResistance() {
         return resistance;
@@ -29,15 +27,6 @@ public abstract class Object extends JLabel {
 
     public void setPoints(int points) {
         this.points = points;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(int xPosition, int yPosition) {
-        this.position.x = xPosition;
-        this.position.y = yPosition;
     }
 
     protected int getRandomInteger(int origin, int bound) {

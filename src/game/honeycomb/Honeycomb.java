@@ -22,7 +22,7 @@ public class Honeycomb {
     }
 
     private void init() {
-        this.map = new Cell[][]{
+        map = new Cell[][]{
                 {empty, empty, empty, empty, empty, empty, cell, cell, empty, empty, empty, empty, empty}, // Row 0
                 {empty, empty, empty, empty, cell, cell, cell, cell, cell, empty, empty, empty, empty}, // Row 1
                 {empty, cell, cell, cell, cell, cell, cell, cell, cell, cell, empty, empty, empty}, // Row 2
@@ -43,25 +43,25 @@ public class Honeycomb {
     }
 
     private void cellPositioning() {
-        int cellWidth = this.cell.getIcon().getIconWidth(); // honeycomb cell width
-        int cellHeight = this.cell.getIcon().getIconHeight(); // honeycomb cell height
+        int cellWidth = cell.getIcon().getIconWidth(); // honeycomb cell width
+        int cellHeight = cell.getIcon().getIconHeight(); // honeycomb cell height
         int halfCell = cellWidth / 2; // honeycomb half cell width
         int cellXPos, cellYPos; // honeycomb cell position
-        for (int row = 0; row < this.map.length; row++) {
+        for (int row = 0; row < map.length; row++) {
             System.out.println("\n");
-            for (int col = 0; col < this.map[row].length; col++) {
+            for (int col = 0; col < map[row].length; col++) {
                 if (row % 2 == 0) {
-                    cellXPos = this.position.x + (halfCell + (col * cellWidth));
+                    cellXPos = position.x + (halfCell + (col * cellWidth));
                 } else {
-                    cellXPos = this.position.x + (col * cellWidth);
+                    cellXPos = position.x + (col * cellWidth);
                 }
                 if (row != 0) {
-                    cellYPos = this.position.y + ((row * cellHeight) - 10);
+                    cellYPos = position.y + ((row * cellHeight) - 10);
                 } else {
-                    cellYPos = this.position.y;
+                    cellYPos = position.y;
                 }
-                this.map[row][col].setPosition(cellXPos, cellYPos);
-                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + this.map[row][col].getPosition().x + "," + this.map[row][col].getPosition().y + ")");
+                map[row][col].setLocation(cellXPos, cellYPos);
+                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getLocation().x + "," + map[row][col].getLocation().y + ")");
             }
         }
     }

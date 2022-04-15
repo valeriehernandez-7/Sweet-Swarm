@@ -11,7 +11,5 @@ import java.awt.Point;
 public class App {
     public static void main(String[] args) {
         SweetSwarm sweetSwarm = new SweetSwarm();
-        // testing code
-        Honeycomb honeycomb = new Honeycomb(new Point(0, 0));
     }
 }

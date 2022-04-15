@@ -1,7 +1,9 @@
+import game.honeycomb.Cell;
+import game.honeycomb.Honeycomb;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Random;
 import javax.swing.*;
 
 /**
@@ -29,6 +31,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private boolean gamePaused = false;
     public int speed = 1000;
     private int score = 0;
+    // game components
+    private Honeycomb honeycomb = new Honeycomb(new Point(316, 101));
 
     /**
      * SweetSwarm class constructor.
@@ -83,6 +87,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
             scoreLbl.setForeground(new Color(36, 6, 0));
             scoreLbl.setText(String.valueOf(score));
             getContentPane().add(scoreLbl);
+            // honeycomb titles
+            createHoneycomb();
             // background label
             backgroundLbl = labelSetup(backgroundImg, 0, 0, true);
             getContentPane().add(backgroundLbl);
@@ -152,6 +158,16 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 }
             }
             slowerBtn.setEnabled(true);
+        }
+    }
+
+    private void createHoneycomb() {
+        for (Cell[] container: honeycomb.getMap()) {
+            System.out.println("\n");
+            for (Cell cell: container) {
+                getContentPane().add(cell);
+                System.out.print("\t\t  POS (" + cell.getLocation().x + "," + cell.getLocation().y + ")");
+            }
         }
     }
 }

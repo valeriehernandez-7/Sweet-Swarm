@@ -12,7 +12,7 @@ public class Resource extends Object {
     public Resource(int xPosition, int yPosition) {
         this.id = this.getRandomInteger(1, 3);
         this.setResistance(2);
-        this.setPosition(xPosition, yPosition);
+        this.setLocation(xPosition, yPosition);
         this.setPoints(100);
         this.setStatus(true);
     }
@@ -28,5 +28,6 @@ public class Resource extends Object {
             source = "src/resources/img/__null.png";
         }
         setIcon(new ImageIcon(source));
+        setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 }

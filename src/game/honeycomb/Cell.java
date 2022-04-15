@@ -1,7 +1,6 @@
 package game.honeycomb;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  *
@@ -9,7 +8,6 @@ import java.awt.*;
  */
 public class Cell extends JLabel {
     private boolean available;
-    private Point position = new Point(); // cell position
     private String entity;
 
     public Cell(boolean visible) {
@@ -26,14 +24,10 @@ public class Cell extends JLabel {
         this.available = available;
     }
 
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setPosition(int xPosition, int yPosition) {
-        this.position.x = xPosition;
-        this.position.y = yPosition;
-        setBounds(xPosition, yPosition, getIcon().getIconWidth(), getIcon().getIconHeight());
+    @Override
+    public void setLocation(int x, int y) {
+        super.setLocation(x, y);
+        setBounds(x, y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 
     public String getEntity() {

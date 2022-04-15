@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 public class Block extends Object {
 
     public Block(int xPosition, int yPosition, boolean visible) {
-        this.setPosition(xPosition, yPosition);
+        this.setLocation(xPosition, yPosition);
         this.setStatus(visible);
     }
 
@@ -24,5 +24,6 @@ public class Block extends Object {
             source = "src/resources/img/__null.png";
         }
         setIcon(new ImageIcon(source));
+        setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 }

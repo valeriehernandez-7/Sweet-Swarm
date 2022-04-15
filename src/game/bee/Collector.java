@@ -10,7 +10,7 @@ public class Collector extends Bee {
     public Collector(int xPosition, int yPosition) {
         this.setHealth(3);
         this.setPower(1);
-        this.setPosition(xPosition, yPosition);
+        this.setLocation(xPosition, yPosition);
         this.setStatus(this.getStates().get(1));
     }
 
