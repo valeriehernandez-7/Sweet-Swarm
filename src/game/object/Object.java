@@ -1,8 +1,7 @@
 package game.object;
 
 import javax.swing.JLabel;
-// import java.util.Random;
-
+import java.util.Random;
 
 /**
  *
@@ -29,8 +28,9 @@ public abstract class Object extends JLabel {
         this.points = points;
     }
 
-    protected int getRandomInteger(int origin, int bound) {
-        return (int) Math.floor(Math.random() * (bound - origin + 1) + origin);
+    protected int getRandomInteger(int bound) {
+        Random random = new Random();
+        return random.nextInt(bound);
     }
 
     public abstract void setStatus(boolean available);

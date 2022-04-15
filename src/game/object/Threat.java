@@ -11,7 +11,7 @@ public class Threat extends Object {
     private int power;
 
     public Threat(int xPosition, int yPosition) {
-        this.id = this.getRandomInteger(1, 3);
+        this.id = this.getRandomInteger(3);
         this.setPower(2);
         this.setResistance(10);
         this.setLocation(xPosition, yPosition);

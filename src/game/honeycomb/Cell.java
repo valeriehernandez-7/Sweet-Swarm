@@ -19,7 +19,7 @@ public class Cell extends JLabel {
         // temp lines 4-5 | 20 - 25
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                System.out.println(getLocation());
+                System.out.print("\n" + getLocation());
             }
         });
     }
