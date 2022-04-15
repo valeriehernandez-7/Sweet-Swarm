@@ -1,20 +1,25 @@
 package game.honeycomb;
 
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  */
-public class Honeycomb {
+public class Honeycomb extends JPanel {
     private Cell[][] map; // honeycomb matrix
     private final Cell cell = new Cell(true); // honeycomb null cell
     private final Cell empty = new Cell(false); // honeycomb common cell
-    private final Point position;
 
-    public Honeycomb(Point position) {
-        this.position = position;
+    public Honeycomb(int xPosition, int yPosition) {
         init();
+        setBounds(xPosition, yPosition, cell.getIcon().getIconWidth() * map[0].length, map.length * (cell.getIcon().getIconHeight() - 10));
+        setOpaque(false);
+        setLayout(null);
+        cellPositioning();
+        // temp line 22
+        setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
     public Cell[][] getMap() {
@@ -39,7 +44,6 @@ public class Honeycomb {
                 {empty, empty, empty, empty, cell, cell, cell, cell, cell, empty, empty, empty, empty}, // Row 13
                 {empty, empty, empty, empty, cell, cell, empty, empty, empty, empty, empty, empty, empty} // Row 14
         };
-        cellPositioning();
     }
 
     private void cellPositioning() {
@@ -51,17 +55,18 @@ public class Honeycomb {
             System.out.println("\n");
             for (int col = 0; col < map[row].length; col++) {
                 if (row % 2 == 0) {
-                    cellXPos = position.x + (halfCell + (col * cellWidth));
+                    cellXPos = getX() + (halfCell + (col * cellWidth));
                 } else {
-                    cellXPos = position.x + (col * cellWidth);
+                    cellXPos = getX() + (col * cellWidth);
                 }
                 if (row != 0) {
-                    cellYPos = position.y + ((row * cellHeight) - 10);
+                    cellYPos = getY() + ((row * cellHeight) - 10);
                 } else {
-                    cellYPos = position.y;
+                    cellYPos = getY();
                 }
                 map[row][col].setLocation(cellXPos, cellYPos);
-                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getLocation().x + "," + map[row][col].getLocation().y + ")");
+                add(map[row][col]);
+                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getX() + "," + map[row][col].getY() + ")");
             }
         }
     }
