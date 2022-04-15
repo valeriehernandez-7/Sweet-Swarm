@@ -14,7 +14,6 @@ public class Cell extends JLabel {
 
     public Cell(boolean visible) {
         setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
-        setLayout(null);
         setVisible(visible);
         setAvailable(visible);
         // temp lines 4-5 | 20 - 25

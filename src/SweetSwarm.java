@@ -32,7 +32,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public int speed = 1000;
     private int score = 0;
     // game components
-    private final Honeycomb honeycomb = new Honeycomb(314, 101);
+    private final Honeycomb honeycomb = new Honeycomb(320, 96);
 
     /**
      * SweetSwarm class constructor.

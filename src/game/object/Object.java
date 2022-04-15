@@ -30,8 +30,7 @@ public abstract class Object extends JLabel {
     }
 
     protected int getRandomInteger(int origin, int bound) {
-    //    Random random = new Random();
-        return  (int)Math.floor(Math.random()*(bound-origin+1)+origin);
+        return (int) Math.floor(Math.random() * (bound - origin + 1) + origin);
     }
 
     public abstract void setStatus(boolean available);

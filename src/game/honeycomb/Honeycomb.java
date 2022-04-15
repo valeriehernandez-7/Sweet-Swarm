@@ -16,10 +16,9 @@ public class Honeycomb extends JPanel {
         init();
         setBounds(xPosition, yPosition, cell.getIcon().getIconWidth() * map[0].length, map.length * (cell.getIcon().getIconHeight() - 10));
         setOpaque(false);
-        setLayout(null);
         cellPositioning();
         // temp line 22
-        setBorder(BorderFactory.createLineBorder(Color.black));
+        setBorder(BorderFactory.createLineBorder(Color.white));
     }
 
     public Cell[][] getMap() {
