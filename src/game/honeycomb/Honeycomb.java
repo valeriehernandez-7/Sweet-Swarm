@@ -8,13 +8,11 @@ import java.awt.Point;
  */
 public class Honeycomb {
     private Cell[][] map; // honeycomb matrix
-    private final Point position = new Point();
+    private final Point position;
 
     public Honeycomb(int xPosition, int yPosition) {
-        position.x = xPosition;
-        position.y = yPosition;
+        position = new Point(xPosition, yPosition);
         init();
-        cellPositioning();
     }
 
     public Cell[][] getMap() {
@@ -39,6 +37,7 @@ public class Honeycomb {
                 {new Cell(false), new Cell(false), new Cell(false), new Cell(false), new Cell(true), new Cell(true), new Cell(true), new Cell(true), new Cell(true), new Cell(false), new Cell(false), new Cell(false), new Cell(false)}, // Row 13
                 {new Cell(false), new Cell(false), new Cell(false), new Cell(false), new Cell(true), new Cell(true), new Cell(false), new Cell(false), new Cell(false), new Cell(false), new Cell(false), new Cell(false), new Cell(false)} // Row 14
         };
+        cellPositioning();
     }
 
     private void cellPositioning() {
@@ -48,7 +47,7 @@ public class Honeycomb {
         int halfCell = cellWidth / 2; // honeycomb half cell width
         int cellXPos, cellYPos; // honeycomb cell position
         for (int row = 0; row < map.length; row++) {
-            System.out.println("\n");
+//            System.out.println("\n");
             for (int col = 0; col < map[row].length; col++) {
                 if (row % 2 == 0) {
                     cellXPos = position.x + (halfCell + (col * cellWidth));
@@ -56,12 +55,12 @@ public class Honeycomb {
                     cellXPos = position.x + (col * cellWidth);
                 }
                 if (row != 0) {
-                    cellYPos = position.y + ((row * cellHeight) - 10);
+                    cellYPos = position.y + ((row * cellHeight) - (row * 10));
                 } else {
                     cellYPos = position.y;
                 }
                 map[row][col].setLocation(cellXPos, cellYPos);
-                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getX() + "," + map[row][col].getY() + ")");
+//                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getX() + "," + map[row][col].getY() + ")");
             }
         }
     }

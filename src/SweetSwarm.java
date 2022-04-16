@@ -32,7 +32,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public int speed = 1000;
     private int score = 0;
     // game components
-    private final Honeycomb honeycomb = new Honeycomb(300, 101);
+    private final Honeycomb honeycomb = new Honeycomb(307, 98);
 
     /**
      * SweetSwarm class constructor.
@@ -162,10 +162,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void createHoneycomb() {
         for (Cell[] container: honeycomb.getMap()) {
-            System.out.println("\n");
             for (Cell cell: container) {
                 getContentPane().add(cell);
-                System.out.print("\t\t  POS (" + cell.getLocation().x + "," + cell.getLocation().y + ")");
             }
         }
     }
