@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
  */
 public class Cell extends JLabel {
     private boolean available;
-    private String entity = "Empty";
+    private String entity = getClass().getSimpleName();
 
     public Cell(boolean visible) {
         setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
@@ -18,7 +18,7 @@ public class Cell extends JLabel {
         setAvailable(visible);
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                System.out.println("⬢\t" + getEntity() + " [" + getX() + "," + getY() + "]");
+                System.out.println("⬢\t" + getEntity().toUpperCase() + " [" + getX() + "," + getY() + "]");
             }
         });
     }
@@ -43,6 +43,6 @@ public class Cell extends JLabel {
 
     public void setEntity(String entity) {
         this.entity = entity;
-        setAvailable(entity == "Empty");
+        setAvailable(entity == "Cell");
     }
 }

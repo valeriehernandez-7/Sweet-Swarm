@@ -1,10 +1,18 @@
-import game.bee.Bee;
 import game.honeycomb.Cell;
 import game.honeycomb.Honeycomb;
+import game.bee.Bee;
+import game.bee.Collector;
+import game.bee.Guard;
+import game.object.Object;
+import game.object.Block;
+import game.object.Resource;
+import game.object.Threat;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
 /**
@@ -36,12 +44,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
     // game components
     private final Honeycomb honeycomb = new Honeycomb(307, 98);
     private final JLabel[] base = new JLabel[7];
-    private final Bee[] bees = new Bee[getRandomInteger(20, 50)];
-    private final Object[] objects = new Object[getRandomInteger(25, 30)];
+    private final List<Bee> bees = new ArrayList<>();
+    private final List<Object> objects = new ArrayList<>();
 
     /**
      * SweetSwarm class constructor.
-     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
@@ -58,7 +65,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * Instantiate and customize the interface components.
-     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     private void getUIComponents() {
@@ -90,10 +96,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             scoreLbl.setText(String.valueOf(score));
             getContentPane().add(scoreLbl);
             // --- game components ---
-            // base
-            addBase();
-            // honeycomb
-            addHoneycomb();
+            gameSetup();
             // background label
             backgroundLbl = labelSetup(backgroundImg, 0, 0, true);
             getContentPane().add(backgroundLbl);
@@ -126,7 +129,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
+        java.lang.Object source = e.getSource();
         if (source == playBtn) {
             System.out.println("⬢\t▶️PLAY");
             gamePaused = false;
@@ -166,22 +169,51 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-    private int getRandomInteger(int origin, int bound) {
-        return (int) ((Math.random() * (bound - origin)) + origin);
+    private void gameSetup() {
+        addObjects();
+        addBees();
+        addBase(new Point(7, 6)); // base
+        addHoneycomb(); // honeycomb
     }
 
-    private void addBase() {
+    private void addObjects() {
+        objectGenerator();
+        for (Object obj : objects) {
+            getContentPane().add(obj);
+        }
+    }
+
+    private void addBees() {
+        beeGenerator();
+        for (Bee bee : bees) {
+            getContentPane().add(bee);
+        }
+    }
+
+    private void addBase(Point origin) {
         // calc positions based on origin point
-        Point origin = new Point(7, 6);
-        Point[] positions = {
-                origin, // [R][C]
-                new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1]
-                new Point((origin.x - 1), origin.y), // [R-1][C]
-                new Point(origin.x, (origin.y - 1)), // [R][C-1]
-                new Point(origin.x, (origin.y + 1)), // [R][C+1]
-                new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1]
-                new Point((origin.x + 1), origin.y) // [R+1][C]
-        };
+        Point[] positions;
+        if (origin.x % 2 != 0) {
+            positions = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        } else {
+            positions = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
+                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        }
         // setup base titles
         for (int i = 0; i < base.length; i++) {
             base[i] = labelSetup(baseImg, honeycomb.getMap()[positions[i].x][positions[i].y].getX(), honeycomb.getMap()[positions[i].x][positions[i].y].getY(), true); // base titles JLabel setup
@@ -194,6 +226,57 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Cell[] container : honeycomb.getMap()) {
             for (Cell cell : container) {
                 getContentPane().add(cell);
+            }
+        }
+    }
+
+    private int getRandomInteger(int origin, int bound) {
+        return (int) ((Math.random() * (bound - origin)) + origin);
+    }
+
+    private void resourceGenerator(Point origin) {
+        // calc positions based on origin point
+        Point[] positions;
+        if (origin.x % 2 != 0) {
+            positions = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        } else {
+            positions = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        }
+        // setup resource titles
+        for (Point position : positions) {
+            objects.add(new Resource(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+            honeycomb.getMap()[position.x][position.y].setEntity("Resource"); // set entity
+        }
+    }
+
+    private void objectGenerator() {
+        resourceGenerator(new Point(4, 2));
+    }
+
+    private void beeGenerator() {
+        int beesAmount = getRandomInteger(20, 50);
+        for (int i = 0; i < beesAmount; i++) {
+            switch (getRandomInteger(1, 3)) {
+                case 1 -> {
+                    bees.add(i, new Collector(honeycomb.getMap()[7][4].getX(), honeycomb.getMap()[7][4].getY()));
+                    honeycomb.getMap()[7][4].setEntity("Collector");
+                }
+                case 2 -> {
+                    bees.add(i, new Guard(honeycomb.getMap()[4][4].getX(), honeycomb.getMap()[4][4].getY()));
+                    honeycomb.getMap()[4][4].setEntity("Guard");
+                }
             }
         }
     }

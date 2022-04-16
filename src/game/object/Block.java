@@ -8,9 +8,9 @@ import javax.swing.ImageIcon;
  */
 public class Block extends Object {
 
-    public Block(int xPosition, int yPosition, boolean visible) {
+    public Block(int xPosition, int yPosition) {
         this.setLocation(xPosition, yPosition);
-        this.setStatus(visible);
+        this.setStatus(true);
     }
 
     @Override

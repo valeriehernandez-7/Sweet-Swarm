@@ -69,10 +69,6 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
-    public void move(int xPosition, int yPosition) {
-        setTarget(xPosition, yPosition);
-    }
-
     public void collect(Resource resource) {
         if (resource.getResistance() > 0) {
             resource.setResistance(resource.getResistance() - 1);
