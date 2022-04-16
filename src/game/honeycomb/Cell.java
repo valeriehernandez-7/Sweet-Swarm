@@ -10,16 +10,15 @@ import java.awt.event.MouseEvent;
  */
 public class Cell extends JLabel {
     private boolean available;
-    private String entity;
+    private String entity = "Empty";
 
     public Cell(boolean visible) {
         setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
         setVisible(visible);
         setAvailable(visible);
-        // temp lines 4-5 | 20 - 25
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                System.out.print("\n" + "POS (" + getX() + "," + getY() + ")");
+                System.out.println("⬢\t" + getEntity() + " [" + getX() + "," + getY() + "]");
             }
         });
     }

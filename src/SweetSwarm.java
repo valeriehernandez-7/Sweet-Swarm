@@ -122,7 +122,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == playBtn) {
-            System.out.println("⬢   ▶️PLAY");
+            System.out.println("⬢\t▶️PLAY");
             gamePaused = false;
             playBtn.setVisible(false);
             playBtn.setEnabled(false);
@@ -131,7 +131,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             fasterBtn.setEnabled(score != 250);
             slowerBtn.setEnabled(score != 2000);
         } else if (source == pauseBtn) {
-            System.out.println("⬢   ⏸️PAUSE");
+            System.out.println("⬢\t⏸️PAUSE");
             gamePaused = true;
             playBtn.setVisible(true);
             playBtn.setEnabled(true);
@@ -142,7 +142,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         } else if (source == slowerBtn) {
             if (speed < 2000) {
                 speed += 250;
-                System.out.println("⬢   ⏪️SLOWER ⏰ " + speed + " ms");
+                System.out.println("⬢\t⏪️SLOWER ⏰ " + speed + " ms");
                 if (speed == 2000) {
                     slowerBtn.setEnabled(false);
                 }
@@ -151,7 +151,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         } else if (source == fasterBtn) {
             if (250 < speed) {
                 speed -= 250;
-                System.out.println("⬢   ⏩️FASTER ⏰ " + speed + " ms");
+                System.out.println("⬢\t⏩️FASTER ⏰ " + speed + " ms");
                 if (speed == 250) {
                     fasterBtn.setEnabled(false);
                 }
