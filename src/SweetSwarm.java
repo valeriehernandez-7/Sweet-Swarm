@@ -32,7 +32,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public int speed = 1000;
     private int score = 0;
     // game components
-    private final Honeycomb honeycomb = new Honeycomb(320, 96);
+    private final Honeycomb honeycomb = new Honeycomb(300, 101);
 
     /**
      * SweetSwarm class constructor.
@@ -43,7 +43,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         setIconImage(new ImageIcon("src/resources/img/__icon.png").getImage());
         setTitle("Sweet Swarm");
         setSize(800, 600);
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,7 +87,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             scoreLbl.setText(String.valueOf(score));
             getContentPane().add(scoreLbl);
             // honeycomb
-            getContentPane().add(honeycomb);
+            createHoneycomb();
             // background label
             backgroundLbl = labelSetup(backgroundImg, 0, 0, true);
             getContentPane().add(backgroundLbl);
@@ -157,6 +157,16 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 }
             }
             slowerBtn.setEnabled(true);
+        }
+    }
+
+    private void createHoneycomb() {
+        for (Cell[] container: honeycomb.getMap()) {
+            System.out.println("\n");
+            for (Cell cell: container) {
+                getContentPane().add(cell);
+                System.out.print("\t\t  POS (" + cell.getLocation().x + "," + cell.getLocation().y + ")");
+            }
         }
     }
 }
