@@ -63,5 +63,6 @@ public class Honeycomb {
 //                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getX() + "," + map[row][col].getY() + ")");
             }
         }
+//        System.out.println("\n");
     }
 }

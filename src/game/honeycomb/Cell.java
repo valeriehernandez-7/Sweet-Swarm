@@ -43,5 +43,6 @@ public class Cell extends JLabel {
 
     public void setEntity(String entity) {
         this.entity = entity;
+        setAvailable(entity == "Empty");
     }
 }

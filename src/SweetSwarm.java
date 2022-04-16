@@ -1,3 +1,4 @@
+import game.bee.Bee;
 import game.honeycomb.Cell;
 import game.honeycomb.Honeycomb;
 
@@ -18,6 +19,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private Font fontSource, font;
     // resources
     private final ImageIcon backgroundImg = new ImageIcon("src/resources/img/__background.png");
+    private final ImageIcon baseImg = new ImageIcon("src/resources/img/__honeycomb-base.png");
     private final ImageIcon playBtn0Img = new ImageIcon("src/resources/img/__btn-play-0.png");
     private final ImageIcon playBtn1Img = new ImageIcon("src/resources/img/__btn-play-1.png");
     private final ImageIcon pauseBtn0Img = new ImageIcon("src/resources/img/__btn-pause-0.png");
@@ -33,6 +35,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private int score = 0;
     // game components
     private final Honeycomb honeycomb = new Honeycomb(307, 98);
+    private final JLabel[] base = new JLabel[7];
+    private final Bee[] bees = new Bee[getRandomInteger(20, 50)];
+    private final Object[] objects = new Object[getRandomInteger(25, 30)];
 
     /**
      * SweetSwarm class constructor.
@@ -43,7 +48,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         setIconImage(new ImageIcon("src/resources/img/__icon.png").getImage());
         setTitle("Sweet Swarm");
         setSize(800, 600);
-        setResizable(true);
+        setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,6 +89,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             scoreLbl.setForeground(new Color(36, 6, 0));
             scoreLbl.setText(String.valueOf(score));
             getContentPane().add(scoreLbl);
+            // --- game components ---
+            // base
+            addBase();
             // honeycomb
             addHoneycomb();
             // background label
@@ -158,9 +166,33 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    private int getRandomInteger(int origin, int bound) {
+        return (int) ((Math.random() * (bound - origin)) + origin);
+    }
+
+    private void addBase() {
+        // calc positions based on origin point
+        Point origin = new Point(7, 6);
+        Point[] positions = {
+                origin, // [R][C]
+                new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1]
+                new Point((origin.x - 1), origin.y), // [R-1][C]
+                new Point(origin.x, (origin.y - 1)), // [R][C-1]
+                new Point(origin.x, (origin.y + 1)), // [R][C+1]
+                new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1]
+                new Point((origin.x + 1), origin.y) // [R+1][C]
+        };
+        // setup base titles
+        for (int i = 0; i < base.length; i++) {
+            base[i] = labelSetup(baseImg, honeycomb.getMap()[positions[i].x][positions[i].y].getX(), honeycomb.getMap()[positions[i].x][positions[i].y].getY(), true); // base titles JLabel setup
+            honeycomb.getMap()[positions[i].x][positions[i].y].setEntity("Base"); // set entity
+            getContentPane().add(base[i]); // display
+        }
+    }
+
     private void addHoneycomb() {
-        for (Cell[] container: honeycomb.getMap()) {
-            for (Cell cell: container) {
+        for (Cell[] container : honeycomb.getMap()) {
+            for (Cell cell : container) {
                 getContentPane().add(cell);
             }
         }
