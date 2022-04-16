@@ -73,8 +73,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
             getContentPane().add(slowerBtn);
             // faster button
             fasterBtn = buttonSetup(fasterBtn1Img, fasterBtn0Img, 247, 333, false, true);
-            ;
-            fasterBtn.setBounds(247, 333, fasterBtn.getIcon().getIconWidth(), fasterBtn.getIcon().getIconHeight());
             getContentPane().add(fasterBtn);
             // --- labels ---
             // score label
@@ -87,7 +85,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             scoreLbl.setText(String.valueOf(score));
             getContentPane().add(scoreLbl);
             // honeycomb
-            createHoneycomb();
+            addHoneycomb();
             // background label
             backgroundLbl = labelSetup(backgroundImg, 0, 0, true);
             getContentPane().add(backgroundLbl);
@@ -160,7 +158,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-    private void createHoneycomb() {
+    private void addHoneycomb() {
         for (Cell[] container: honeycomb.getMap()) {
             for (Cell cell: container) {
                 getContentPane().add(cell);
