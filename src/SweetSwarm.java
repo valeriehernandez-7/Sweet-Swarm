@@ -234,6 +234,21 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
+    private int[] randomPositionGeneratior(){
+        int x =0;
+        int y = 0;
+        boolean doesntExist = true;
+        while(doesntExist){
+            x = getRandomInteger(1, 15);
+            y = getRandomInteger(1, 13);
+            if(honeycomb.getMap()[x][y].isAvailable()){
+                honeycomb.getMap()[x][y].setAvailable(false);
+                doesntExist = false;
+            }
+        }
+        return new int[]{x,y};
+    }
+
     private void resourceGenerator(Point origin) {
         // calc positions based on origin point
         Point[] positions;
@@ -257,6 +272,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         // setup resource titles
         for (Point position : positions) {
             objects.add(new Resource(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+            //honeycomb.getMap()[position.x][position.y].setAvailable(false); idk dude ud ya hace esto en alguna parte? si no quitele el comentario jiji
             honeycomb.getMap()[position.x][position.y].setEntity("Resource"); // set entity
         }
     }
@@ -266,16 +282,18 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void beeGenerator() {
-        int beesAmount = getRandomInteger(20, 50);
+        int beesAmount = 10;
+        randomPositionGeneratior();
         for (int i = 0; i < beesAmount; i++) {
+            int[] coords = randomPositionGeneratior();
             switch (getRandomInteger(1, 3)) {
                 case 1 -> {
-                    bees.add(i, new Collector(honeycomb.getMap()[7][4].getX(), honeycomb.getMap()[7][4].getY()));
-                    honeycomb.getMap()[7][4].setEntity("Collector");
+                    bees.add(i, new Collector(honeycomb.getMap()[coords[0]][coords[1]].getX(), honeycomb.getMap()[coords[0]][coords[1]].getY()));
+                    honeycomb.getMap()[coords[0]][coords[1]].setEntity("Collector");
                 }
                 case 2 -> {
-                    bees.add(i, new Guard(honeycomb.getMap()[4][4].getX(), honeycomb.getMap()[4][4].getY()));
-                    honeycomb.getMap()[4][4].setEntity("Guard");
+                    bees.add(i, new Guard(honeycomb.getMap()[coords[0]][coords[1]].getX(), honeycomb.getMap()[coords[0]][coords[1]].getY()));
+                    honeycomb.getMap()[coords[0]][coords[1]].setEntity("Guard");
                 }
             }
         }
