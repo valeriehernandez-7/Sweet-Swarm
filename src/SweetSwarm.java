@@ -170,23 +170,23 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void gameSetup() {
-        addObjects();
-        addBees();
         addBase(new Point(7, 6)); // base
+        addObjects(); // objects
+        addBees(); // bees
         addHoneycomb(); // honeycomb
     }
 
     private void addObjects() {
-        objectGenerator();
+        objectGenerator(); // create objects
         for (Object obj : objects) {
-            getContentPane().add(obj);
+            getContentPane().add(obj); // display object
         }
     }
 
     private void addBees() {
-        beeGenerator();
+        beeGenerator(); // create bees
         for (Bee bee : bees) {
-            getContentPane().add(bee);
+            getContentPane().add(bee); // display bee
         }
     }
 
@@ -217,15 +217,15 @@ public class SweetSwarm extends JFrame implements ActionListener {
         // setup base titles
         for (int i = 0; i < base.length; i++) {
             base[i] = labelSetup(baseImg, honeycomb.getMap()[positions[i].x][positions[i].y].getX(), honeycomb.getMap()[positions[i].x][positions[i].y].getY(), true); // base titles JLabel setup
-            honeycomb.getMap()[positions[i].x][positions[i].y].setEntity("Base"); // set entity
-            getContentPane().add(base[i]); // display
+            honeycomb.getMap()[positions[i].x][positions[i].y].setEntity("Base");
+            getContentPane().add(base[i]); // display base
         }
     }
 
     private void addHoneycomb() {
         for (Cell[] container : honeycomb.getMap()) {
             for (Cell cell : container) {
-                getContentPane().add(cell);
+                getContentPane().add(cell); // display cell
             }
         }
     }
@@ -234,19 +234,42 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
-    private int[] randomPositionGeneratior(){
-        int x =0;
-        int y = 0;
-        boolean doesntExist = true;
-        while(doesntExist){
-            x = getRandomInteger(1, 15);
-            y = getRandomInteger(1, 13);
-            if(honeycomb.getMap()[x][y].isAvailable()){
-                honeycomb.getMap()[x][y].setAvailable(false);
-                doesntExist = false;
+    private Point randomPositionGenerator(String entity) {
+        Point position = new Point();
+        boolean available = true;
+        while (available) {
+            position.x = getRandomInteger(1, 15);  // 0 < x < 15
+            position.y = getRandomInteger(1, 13); // 0 < x < 13
+            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
+                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+                available = false;
             }
         }
-        return new int[]{x,y};
+        return position;
+    }
+
+    private Point randomPositionGenerator(Point rows, Point cols, String entity) {
+        Point position = new Point();
+        boolean available = true;
+        while (available) {
+            position.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
+            position.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
+            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
+                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+                available = false;
+            }
+        }
+        return position;
+    }
+
+    private void blockGenerator(Point position) {
+        objects.add(new Block(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+        honeycomb.getMap()[position.x][position.y].setEntity("Block");
+    }
+
+    private void threatGenerator(Point position) {
+        objects.add(new Threat(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+        honeycomb.getMap()[position.x][position.y].setEntity("Threat");
     }
 
     private void resourceGenerator(Point origin) {
@@ -272,28 +295,40 @@ public class SweetSwarm extends JFrame implements ActionListener {
         // setup resource titles
         for (Point position : positions) {
             objects.add(new Resource(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
-            //honeycomb.getMap()[position.x][position.y].setAvailable(false); idk dude ud ya hace esto en alguna parte? si no quitele el comentario jiji
-            honeycomb.getMap()[position.x][position.y].setEntity("Resource"); // set entity
+            honeycomb.getMap()[position.x][position.y].setEntity("Resource");
         }
     }
 
     private void objectGenerator() {
-        resourceGenerator(new Point(4, 2));
+        // resources init
+        int resourcesAmount = getRandomInteger(4, 9); // 3 < x < 9
+        for (int i = 0; i < resourcesAmount; i++) {
+            resourceGenerator(randomPositionGenerator(new Point(3, 9), new Point(3, 9), "Resource"));
+        }
+        // blocks init
+        int blocksAmount = getRandomInteger(10, 16); // 9 < x < 16
+        for (int i = 0; i < blocksAmount; i++) {
+            blockGenerator(randomPositionGenerator("Block"));
+        }
+        // threats init
+        int threatsAmount = getRandomInteger(10, 16); // 9 < x < 16
+        for (int i = 0; i < threatsAmount; i++) {
+            threatGenerator(randomPositionGenerator("Threat"));
+        }
     }
 
     private void beeGenerator() {
-        int beesAmount = 10;
-        randomPositionGeneratior();
+        int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
         for (int i = 0; i < beesAmount; i++) {
-            int[] coords = randomPositionGeneratior();
-            switch (getRandomInteger(1, 3)) {
+            Point position;
+            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
                 case 1 -> {
-                    bees.add(i, new Collector(honeycomb.getMap()[coords[0]][coords[1]].getX(), honeycomb.getMap()[coords[0]][coords[1]].getY()));
-                    honeycomb.getMap()[coords[0]][coords[1]].setEntity("Collector");
+                    position = randomPositionGenerator("Collector");
+                    bees.add(i, new Collector(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
                 }
                 case 2 -> {
-                    bees.add(i, new Guard(honeycomb.getMap()[coords[0]][coords[1]].getX(), honeycomb.getMap()[coords[0]][coords[1]].getY()));
-                    honeycomb.getMap()[coords[0]][coords[1]].setEntity("Guard");
+                    position = randomPositionGenerator("Guard");
+                    bees.add(i, new Guard(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
                 }
             }
         }
