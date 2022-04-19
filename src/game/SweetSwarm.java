@@ -175,32 +175,32 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
-    private Point randomPositionGenerator(String entity) {
-        Point position = new Point();
+    private Point positioning(String entity) {
+        Point cell = new Point();
         boolean available = true;
         while (available) {
-            position.x = getRandomInteger(1, 15);  // 0 < x < 15
-            position.y = getRandomInteger(1, 13); // 0 < x < 13
-            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
-                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+            cell.x = getRandomInteger(1, 15);  // 0 < x < 15
+            cell.y = getRandomInteger(1, 13); // 0 < x < 13
+            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
                 available = false;
             }
         }
-        return position;
+        return cell;
     }
 
-    private Point randomPositionGenerator(Point rows, Point cols, String entity) {
-        Point position = new Point();
+    private Point positioning(Point rows, Point cols, String entity) {
+        Point cell = new Point();
         boolean available = true;
         while (available) {
-            position.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
-            position.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
-            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
-                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+            cell.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
+            cell.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
+            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
                 available = false;
             }
         }
-        return position;
+        return cell;
     }
 
     private void gameSetup() {
@@ -211,10 +211,10 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void addBase(Point origin) {
-        // calc positions based on origin point
-        Point[] positions;
+        // calc cell positions based on origin point (main cell)
+        Point[] cells;
         if (origin.x % 2 != 0) {
-            positions = new Point[]{
+            cells = new Point[]{
                     origin, // [R][C]
                     new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
                     new Point((origin.x - 1), origin.y), // [R-1][C]
@@ -224,7 +224,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     new Point((origin.x + 1), origin.y) // [R+1][C]
             };
         } else {
-            positions = new Point[]{
+            cells = new Point[]{
                     origin, // [R][C]
                     new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
                     new Point((origin.x - 1), origin.y), // [R-1][C]
@@ -236,8 +236,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
         // setup base titles
         for (int i = 0; i < base.length; i++) {
-            base[i] = labelSetup(baseImg, honeycomb.getMap()[positions[i].x][positions[i].y].getX(), honeycomb.getMap()[positions[i].x][positions[i].y].getY(), true); // base titles JLabel setup
-            honeycomb.getMap()[positions[i].x][positions[i].y].setEntity("Base");
+            base[i] = labelSetup(baseImg, honeycomb.getMap()[cells[i].x][cells[i].y].getX(), honeycomb.getMap()[cells[i].x][cells[i].y].getY(), true); // base titles JLabel setup
+            honeycomb.getMap()[cells[i].x][cells[i].y].setEntity("Base");
             getContentPane().add(base[i]); // display base
         }
     }
@@ -265,10 +265,10 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void resourceGenerator(Point origin) {
-        // calc positions based on origin point
-        Point[] positions;
+        // calc cell positions based on origin point (main cell)
+        Point[] cells;
         if (origin.x % 2 != 0) {
-            positions = new Point[]{
+            cells = new Point[]{
                     origin, // [R][C]
                     new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
                     new Point((origin.x - 1), origin.y), // [R-1][C]
@@ -276,7 +276,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     new Point((origin.x + 1), origin.y) // [R+1][C]
             };
         } else {
-            positions = new Point[]{
+            cells = new Point[]{
                     origin, // [R][C]
                     new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
                     new Point((origin.x - 1), origin.y), // [R-1][C]
@@ -285,52 +285,52 @@ public class SweetSwarm extends JFrame implements ActionListener {
             };
         }
         // setup resource titles
-        for (Point position : positions) {
-            objects.add(new Resource(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY(), position.x, position.y));
-            honeycomb.getMap()[position.x][position.y].setEntity("Resource");
+        for (Point cell : cells) {
+            objects.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+            honeycomb.getMap()[cell.x][cell.y].setEntity("Resource");
         }
     }
 
-    private void blockGenerator(Point position) {
-        objects.add(new Block(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY(), position.x, position.y));
-        honeycomb.getMap()[position.x][position.y].setEntity("Block");
+    private void blockGenerator(Point cell) {
+        objects.add(new Block(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+        honeycomb.getMap()[cell.x][cell.y].setEntity("Block");
     }
 
-    private void threatGenerator(Point position) {
-        objects.add(new Threat(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY(), position.x, position.y));
-        honeycomb.getMap()[position.x][position.y].setEntity("Threat");
+    private void threatGenerator(Point cell) {
+        objects.add(new Threat(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+        honeycomb.getMap()[cell.x][cell.y].setEntity("Threat");
     }
 
     private void objectGenerator() {
         // resources init
         int resourcesAmount = getRandomInteger(4, 9); // 3 < x < 9
         for (int i = 0; i < resourcesAmount; i++) {
-            resourceGenerator(randomPositionGenerator(new Point(3, 9), new Point(3, 9), "Resource"));
+            resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
         }
         // blocks init
         int blocksAmount = getRandomInteger(10, 16); // 9 < x < 16
         for (int i = 0; i < blocksAmount; i++) {
-            blockGenerator(randomPositionGenerator("Block"));
+            blockGenerator(positioning("Block"));
         }
         // threats init
         int threatsAmount = getRandomInteger(10, 16); // 9 < x < 16
         for (int i = 0; i < threatsAmount; i++) {
-            threatGenerator(randomPositionGenerator("Threat"));
+            threatGenerator(positioning("Threat"));
         }
     }
 
     private void beeGenerator() {
         int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
         for (int i = 0; i < beesAmount; i++) {
-            Point position;
+            Point cell;
             switch (getRandomInteger(1, 3)) {  // 0 < x < 3
                 case 1 -> {
-                    position = randomPositionGenerator("Collector");
-                    bees.add(i, new Collector(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY(), position.x, position.y));
+                    cell = positioning("Collector");
+                    bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
                 case 2 -> {
-                    position = randomPositionGenerator("Guard");
-                    bees.add(i, new Guard(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY(), position.x, position.y));
+                    cell = positioning("Guard");
+                    bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
             }
         }
