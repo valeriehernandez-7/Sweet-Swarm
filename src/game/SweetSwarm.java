@@ -41,6 +41,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     // game features
     public boolean gamePaused;
     public int speed = 1000;
+    public Timer timer = new Timer(speed, simulation -> play());
     public int score = 0;
     // game components
     public final Honeycomb honeycomb = new Honeycomb(307, 98);
@@ -62,6 +63,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getUIComponents();
         setVisible(true);
+        timer.setRepeats(false);
     }
 
     /**
@@ -140,7 +142,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             pauseBtn.setEnabled(true);
             fasterBtn.setEnabled(score != 250);
             slowerBtn.setEnabled(score != 2000);
-            play();
+            if (!timer.isRunning()) {
+                timer.start();
+            }
         } else if (source == pauseBtn) {
             System.out.println("⬢\t⏸️PAUSE");
             gamePaused = true;
@@ -150,6 +154,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             pauseBtn.setEnabled(false);
             slowerBtn.setEnabled(false);
             fasterBtn.setEnabled(false);
+            timer.stop();
         } else if (source == slowerBtn) {
             speedManager(-1);
         } else if (source == fasterBtn) {
@@ -366,13 +371,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void play() {
         while (!gamePaused && !bees.isEmpty()) {
-            try {
-                System.out.println("⬢\t⏰ TICK");
-                // simulation
-                Thread.sleep(speed);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            System.out.println("⬢\t⏰ TICK");
+            timer.setDelay(speed);
+            // simulation
         }
         gameOver();
     }
