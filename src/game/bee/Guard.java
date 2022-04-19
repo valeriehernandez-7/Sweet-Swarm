@@ -8,7 +8,8 @@ import game.SweetSwarm;
  */
 public class Guard extends Bee {
 
-    public Guard(int xPosition, int yPosition) {
+    public Guard(int xPosition, int yPosition, int row, int column) {
+        this.setCell(row, column);
         this.setHealth(6);
         this.setPower(2);
         this.setLocation(xPosition, yPosition);

@@ -9,7 +9,8 @@ import javax.swing.ImageIcon;
 public class Threat extends Object {
     private int power;
 
-    public Threat(int xPosition, int yPosition) {
+    public Threat(int xPosition, int yPosition, int row, int column) {
+        this.setCell(row, column);
         this.setPower(2);
         this.setResistance(10);
         this.setLocation(xPosition, yPosition);

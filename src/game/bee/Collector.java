@@ -8,7 +8,8 @@ import game.SweetSwarm;
  */
 public class Collector extends Bee {
 
-    public Collector(int xPosition, int yPosition) {
+    public Collector(int xPosition, int yPosition, int row, int column) {
+        this.setCell(row, column);
         this.setHealth(3);
         this.setPower(1);
         this.setLocation(xPosition, yPosition);

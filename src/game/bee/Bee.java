@@ -13,11 +13,21 @@ import java.util.List;
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
 public abstract class Bee extends JLabel {
+    protected int[] cell = new int[2];
     protected int health; // bee health
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
+
+    public int[] getCell() {
+        return cell;
+    }
+
+    public void setCell(int cellRow, int cellColum) {
+        this.cell[0] = cellRow;
+        this.cell[1] = cellColum;
+    }
 
     public int getHealth() {
         return health;
@@ -75,12 +85,13 @@ public abstract class Bee extends JLabel {
             resource.setResistance(resource.getResistance() - 1);
             if (resource.getResistance() == 0) {
                 sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
-//                sweetSwarm.honeycomb.getMap()[resource.getX()][resource.getY()].setEntity("Cell"); // set the Honeycomb Cell available
+                sweetSwarm.honeycomb.getMap()[resource.getCell()[0]][resource.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
                 sweetSwarm.objects.remove(resource); // remove the resource from Sweet Swarm objects list
             }
         }
         setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
         setStatus(getStates().get(3)); // status = collecting
+        // move to the honeycomb base
     }
 
     public abstract void controller(SweetSwarm sweetSwarm);
