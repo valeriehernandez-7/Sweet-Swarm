@@ -180,6 +180,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return cell;
     }
 
+
     private Point positioning(Point rows, Point cols, String entity) {
         Point cell = new Point();
         boolean available = true;
@@ -196,7 +197,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void gameSetup() {
         addBase(new Point(7, 6)); // base
-        addObjects(); // objects
+        //addObjects(); // objects
         addBees(); // bees
         addHoneycomb(); // honeycomb
     }
@@ -311,10 +312,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void beeGenerator() {
-        int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
+        //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
+        int beesAmount = 1;
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
-            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
+            switch (getRandomInteger(2, 3)) {  // 0 < x < 3
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
@@ -378,6 +380,33 @@ public class SweetSwarm extends JFrame implements ActionListener {
             new SweetSwarm();
         }
     }
+//    private Point positioning(Bee entity) {
+//        Point cell = new Point();
+//        boolean available = true;
+//        while (available) {
+//            cell.x = entity.getCell()[0] + 1;
+//            cell.y = entity.getCell()[1];
+//            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+//                available = false;
+//            }
+//        }
+//        return cell;
+//    }
+
+    private void moveBees(){
+        System.out.println("moveBees");
+        for(Bee i : bees){ //
+            System.out.println(i);
+            try {
+                //
+                Thread.sleep(speed); // Makes each Bee move one by one
+                i.setLocation(honeycomb.getMap()[i.getCell()[0]+1][i.getCell()[1]+1].getX(),honeycomb.getMap()[i.getCell()[0]+1][i.getCell()[1]+1].getY());
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void play() {
         while (!gamePaused) {
@@ -389,12 +418,28 @@ public class SweetSwarm extends JFrame implements ActionListener {
             timer.setDelay(speed); // timer speed
 
             // simulation [game loop] by Mariana tkm
-
-            try { // thread delay
+            try{
                 Thread.sleep(speed);
-            } catch (InterruptedException e) {
+                System.out.println("Try");
+                moveBees();
+            }
+            catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 }
+
+// for (int i=0;i<bees.size();i++){
+//                    //e.collect();
+//
+//                    try{
+//                        System.out.println(i);
+//                        bees.get(i).collect(objects.get(i),this); }
+//                    catch (IndexOutOfBoundsException e){
+//                        break;
+//                        //System.out.println("paso aca");
+//                        //bees.get(i).collect(objects.get(i),this);
+//                    }
+
+//i.setLocation(honeycomb.getMap()[i.getCell()[cell.x]][i.getCell()[cell.y]].getX(),honeycomb.getMap()[i.getCell()[cell.x]][i.getCell()[cell.y]].getY());
