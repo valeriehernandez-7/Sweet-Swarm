@@ -8,6 +8,6 @@ import game.SweetSwarm;
 public class App {
     public static void main(String[] args) {
         System.out.println("⬢ \uD83D\uDC1D Sweet Swarm \uD83D\uDC1D ⬢");
-        SweetSwarm sweetSwarm = new SweetSwarm();
+        new SweetSwarm();
     }
 }

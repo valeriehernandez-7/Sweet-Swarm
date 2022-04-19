@@ -41,7 +41,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     // game features
     public boolean gamePaused;
     public int speed = 1000;
-    public Timer timer = new Timer(speed, simulation -> play());
+    public Timer timer = new Timer(speed, simulation -> new Thread(this::play, "simulation").start());
     public int score = 0;
     // game components
     public final Honeycomb honeycomb = new Honeycomb(307, 98);
@@ -142,7 +142,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             pauseBtn.setEnabled(true);
             fasterBtn.setEnabled(score != 250);
             slowerBtn.setEnabled(score != 2000);
-            if (!timer.isRunning()) {
+            if (!timer.isRunning()) { // starts the simulation [ play() ]
                 timer.start();
             }
         } else if (source == pauseBtn) {
@@ -154,7 +154,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             pauseBtn.setEnabled(false);
             slowerBtn.setEnabled(false);
             fasterBtn.setEnabled(false);
-            timer.stop();
+            timer.stop(); // stops the simulation [ play() ]
         } else if (source == slowerBtn) {
             speedManager(-1);
         } else if (source == fasterBtn) {
@@ -353,7 +353,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     }
                 }
                 slowerBtn.setEnabled(true);
-                gameOver();
             }
         }
     }
@@ -365,16 +364,26 @@ public class SweetSwarm extends JFrame implements ActionListener {
         dispose();
         if (input == JOptionPane.YES_OPTION) {
             System.out.println("\n⬢ \uD83D\uDC1D Sweet Swarm \uD83D\uDC1D ⬢");
-            SweetSwarm sweetSwarm = new SweetSwarm();
+            new SweetSwarm();
         }
     }
 
     private void play() {
-        while (!gamePaused && !bees.isEmpty()) {
+        while (!gamePaused) {
+            if (bees.isEmpty()) { // gameOver condition
+                gameOver();
+                break;
+            }
             System.out.println("⬢\t⏰ TICK");
-            timer.setDelay(speed);
-            // simulation
+            timer.setDelay(speed); // timer speed
+
+            // simulation [game loop] by Mariana tkm
+
+            try { // thread delay
+                Thread.sleep(speed);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        gameOver();
     }
 }
