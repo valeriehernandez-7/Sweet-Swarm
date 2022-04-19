@@ -13,9 +13,9 @@ public class Cell extends JLabel {
     private String entity = getClass().getSimpleName();
 
     public Cell(boolean visible) {
-        setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
+        this.available = visible;
         setVisible(visible);
-        setAvailable(visible);
+        setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 System.out.println("⬢\t" + getEntity().toUpperCase() + " [" + getX() + "," + getY() + "]");
@@ -25,10 +25,6 @@ public class Cell extends JLabel {
 
     public boolean isAvailable() {
         return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     @Override
@@ -43,6 +39,6 @@ public class Cell extends JLabel {
 
     public void setEntity(String entity) {
         this.entity = entity;
-        setAvailable(entity == "Cell");
+        this.available = (entity == "Cell");
     }
 }

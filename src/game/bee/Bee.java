@@ -1,6 +1,7 @@
 package game.bee;
 
-import game.object.Resource;
+import game.SweetSwarm;
+import game.object.Object;
 
 import java.awt.Point;
 import javax.swing.*;
@@ -69,15 +70,18 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
-    public void collect(Resource resource, Point base, JFrame sweetSwarm) {
+    public void collect(Object resource, SweetSwarm sweetSwarm) {
         if (resource.getResistance() > 0) {
             resource.setResistance(resource.getResistance() - 1);
-        } else {
-            sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
+            if (resource.getResistance() == 0) {
+                sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
+//                sweetSwarm.honeycomb.getMap()[resource.getX()][resource.getY()].setEntity("Cell"); // set the Honeycomb Cell available
+                sweetSwarm.objects.remove(resource); // remove the resource from Sweet Swarm objects list
+            }
         }
-        setTarget(base.x, base.y); // move to honeycomb base main cell (center) SweetWarm.base[0]
+        setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
         setStatus(getStates().get(3)); // status = collecting
     }
 
-    public abstract void controller();
+    public abstract void controller(SweetSwarm sweetSwarm);
 }

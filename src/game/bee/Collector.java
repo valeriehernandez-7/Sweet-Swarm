@@ -1,5 +1,7 @@
 package game.bee;
 
+import game.SweetSwarm;
+
 /**
  *
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
@@ -13,6 +15,6 @@ public class Collector extends Bee {
         this.setStatus(this.getStates().get(1));
     }
 
-    public void controller() {
+    public void controller(SweetSwarm sweetSwarm) {
     }
 }

@@ -1,3 +1,5 @@
+package game;
+
 import game.honeycomb.Cell;
 import game.honeycomb.Honeycomb;
 import game.bee.Bee;
@@ -37,18 +39,18 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private final ImageIcon fasterBtn0Img = new ImageIcon("src/resources/img/__btn-faster-0.png");
     private final ImageIcon fasterBtn1Img = new ImageIcon("src/resources/img/__btn-faster-1.png");
     // game features
-    private boolean gameOver = false;
-    private boolean gamePaused = false;
+    public boolean gameOver = false;
+    public boolean gamePaused = false;
     public int speed = 1000;
-    private int score = 0;
+    public int score = 0;
     // game components
-    private final Honeycomb honeycomb = new Honeycomb(307, 98);
-    private final JLabel[] base = new JLabel[7];
-    private final List<Bee> bees = new ArrayList<>();
-    private final List<Object> objects = new ArrayList<>();
+    public final Honeycomb honeycomb = new Honeycomb(307, 98);
+    public final JLabel[] base = new JLabel[7];
+    public final List<Bee> bees = new ArrayList<>();
+    public final List<Object> objects = new ArrayList<>();
 
     /**
-     * SweetSwarm class constructor.
+     * game.SweetSwarm class constructor.
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
