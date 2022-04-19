@@ -14,20 +14,11 @@ public class Resource extends Object {
         this.setResistance(2);
         this.setLocation(xPosition, yPosition);
         this.setPoints(100);
-        this.setStatus(true);
+        this.updateStatus();
     }
 
-    @Override
-    public void setStatus(boolean available) {
-        String source;
-        if (available) {
-            // common state
-            source = "src/resources/img/__object-Resource-" + this.id + "-" + this.getResistance() + ".png";
-        } else {
-            // destroyed or not available state
-            source = "src/resources/img/__null.png";
-        }
-        setIcon(new ImageIcon(source));
+    public void updateStatus() {
+        setIcon(new ImageIcon("src/resources/img/__object-Resource-" + this.id + "-" + this.getResistance() + ".png"));
         setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 }

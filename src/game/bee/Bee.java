@@ -69,13 +69,14 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
-    public void collect(Resource resource) {
+    public void collect(Resource resource, Point base, JFrame sweetSwarm) {
         if (resource.getResistance() > 0) {
             resource.setResistance(resource.getResistance() - 1);
         } else {
-            resource.setStatus(false);
+            sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
         }
-        // move() to honeycomb base
+        setTarget(base.x, base.y); // move to honeycomb base main cell (center) SweetWarm.base[0]
+        setStatus(getStates().get(3)); // status = collecting
     }
 
     public abstract void controller();

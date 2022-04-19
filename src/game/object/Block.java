@@ -10,20 +10,7 @@ public class Block extends Object {
 
     public Block(int xPosition, int yPosition) {
         this.setLocation(xPosition, yPosition);
-        this.setStatus(true);
-    }
-
-    @Override
-    public void setStatus(boolean available) {
-        String source;
-        if (available) {
-            // common state
-            source = "src/resources/img/__object-Block.png";
-        } else {
-            // destroyed or not available state
-            source = "src/resources/img/__null.png";
-        }
-        setIcon(new ImageIcon(source));
-        setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
+        this.setIcon(new ImageIcon("src/resources/img/__object-Block.png"));
+        this.setBounds(getLocation().x, getLocation().y, getIcon().getIconWidth(), getIcon().getIconHeight());
     }
 }

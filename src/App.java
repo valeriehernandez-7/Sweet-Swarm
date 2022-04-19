@@ -1,8 +1,3 @@
-import game.bee.Guard;
-import game.honeycomb.Honeycomb;
-
-import java.awt.Point;
-
 /**
  *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>

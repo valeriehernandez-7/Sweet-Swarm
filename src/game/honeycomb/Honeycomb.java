@@ -8,7 +8,7 @@ import java.awt.Point;
  */
 public class Honeycomb {
     private Cell[][] map; // honeycomb matrix
-    private final Point position;
+    private final Point position; // honeycomb origin position
 
     public Honeycomb(int xPosition, int yPosition) {
         position = new Point(xPosition, yPosition);

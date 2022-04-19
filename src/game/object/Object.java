@@ -32,6 +32,4 @@ public abstract class Object extends JLabel {
         Random random = new Random();
         return random.nextInt(bound);
     }
-
-    public abstract void setStatus(boolean available);
 }

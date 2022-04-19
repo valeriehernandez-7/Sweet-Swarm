@@ -169,25 +169,43 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    private int getRandomInteger(int origin, int bound) {
+        return (int) ((Math.random() * (bound - origin)) + origin);
+    }
+
+    private Point randomPositionGenerator(String entity) {
+        Point position = new Point();
+        boolean available = true;
+        while (available) {
+            position.x = getRandomInteger(1, 15);  // 0 < x < 15
+            position.y = getRandomInteger(1, 13); // 0 < x < 13
+            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
+                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+                available = false;
+            }
+        }
+        return position;
+    }
+
+    private Point randomPositionGenerator(Point rows, Point cols, String entity) {
+        Point position = new Point();
+        boolean available = true;
+        while (available) {
+            position.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
+            position.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
+            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
+                honeycomb.getMap()[position.x][position.y].setEntity(entity);
+                available = false;
+            }
+        }
+        return position;
+    }
+
     private void gameSetup() {
         addBase(new Point(7, 6)); // base
         addObjects(); // objects
         addBees(); // bees
         addHoneycomb(); // honeycomb
-    }
-
-    private void addObjects() {
-        objectGenerator(); // create objects
-        for (Object obj : objects) {
-            getContentPane().add(obj); // display object
-        }
-    }
-
-    private void addBees() {
-        beeGenerator(); // create bees
-        for (Bee bee : bees) {
-            getContentPane().add(bee); // display bee
-        }
     }
 
     private void addBase(Point origin) {
@@ -222,54 +240,26 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    private void addObjects() {
+        objectGenerator(); // create objects
+        for (Object obj : objects) {
+            getContentPane().add(obj); // display object
+        }
+    }
+
+    private void addBees() {
+        beeGenerator(); // create bees
+        for (Bee bee : bees) {
+            getContentPane().add(bee); // display bee
+        }
+    }
+
     private void addHoneycomb() {
         for (Cell[] container : honeycomb.getMap()) {
             for (Cell cell : container) {
                 getContentPane().add(cell); // display cell
             }
         }
-    }
-
-    private int getRandomInteger(int origin, int bound) {
-        return (int) ((Math.random() * (bound - origin)) + origin);
-    }
-
-    private Point randomPositionGenerator(String entity) {
-        Point position = new Point();
-        boolean available = true;
-        while (available) {
-            position.x = getRandomInteger(1, 15);  // 0 < x < 15
-            position.y = getRandomInteger(1, 13); // 0 < x < 13
-            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
-                honeycomb.getMap()[position.x][position.y].setEntity(entity);
-                available = false;
-            }
-        }
-        return position;
-    }
-
-    private Point randomPositionGenerator(Point rows, Point cols, String entity) {
-        Point position = new Point();
-        boolean available = true;
-        while (available) {
-            position.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
-            position.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
-            if (honeycomb.getMap()[position.x][position.y].isAvailable()) {
-                honeycomb.getMap()[position.x][position.y].setEntity(entity);
-                available = false;
-            }
-        }
-        return position;
-    }
-
-    private void blockGenerator(Point position) {
-        objects.add(new Block(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
-        honeycomb.getMap()[position.x][position.y].setEntity("Block");
-    }
-
-    private void threatGenerator(Point position) {
-        objects.add(new Threat(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
-        honeycomb.getMap()[position.x][position.y].setEntity("Threat");
     }
 
     private void resourceGenerator(Point origin) {
@@ -297,6 +287,16 @@ public class SweetSwarm extends JFrame implements ActionListener {
             objects.add(new Resource(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
             honeycomb.getMap()[position.x][position.y].setEntity("Resource");
         }
+    }
+
+    private void blockGenerator(Point position) {
+        objects.add(new Block(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+        honeycomb.getMap()[position.x][position.y].setEntity("Block");
+    }
+
+    private void threatGenerator(Point position) {
+        objects.add(new Threat(honeycomb.getMap()[position.x][position.y].getX(), honeycomb.getMap()[position.x][position.y].getY()));
+        honeycomb.getMap()[position.x][position.y].setEntity("Threat");
     }
 
     private void objectGenerator() {
