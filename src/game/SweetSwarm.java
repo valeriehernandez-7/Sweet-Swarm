@@ -18,7 +18,6 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
@@ -28,6 +27,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private JLabel scoreLbl, backgroundLbl;
     private Font fontSource, font;
     // resources
+    private final ImageIcon iconImg = new ImageIcon("src/resources/img/__icon.png");
     private final ImageIcon backgroundImg = new ImageIcon("src/resources/img/__background.png");
     private final ImageIcon baseImg = new ImageIcon("src/resources/img/__honeycomb-base.png");
     private final ImageIcon playBtn0Img = new ImageIcon("src/resources/img/__btn-play-0.png");
@@ -39,8 +39,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private final ImageIcon fasterBtn0Img = new ImageIcon("src/resources/img/__btn-faster-0.png");
     private final ImageIcon fasterBtn1Img = new ImageIcon("src/resources/img/__btn-faster-1.png");
     // game features
-    public boolean gameOver = false;
-    public boolean gamePaused = false;
+    public boolean gamePaused;
     public int speed = 1000;
     public int score = 0;
     // game components
@@ -50,11 +49,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public final List<Object> objects = new ArrayList<>();
 
     /**
-     * game.SweetSwarm class constructor.
+     * SweetSwarm class constructor.
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
-        setIconImage(new ImageIcon("src/resources/img/__icon.png").getImage());
+        setIconImage(iconImg.getImage());
         setTitle("Sweet Swarm");
         setSize(800, 600);
         setResizable(false);
@@ -141,6 +140,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             pauseBtn.setEnabled(true);
             fasterBtn.setEnabled(score != 250);
             slowerBtn.setEnabled(score != 2000);
+            play();
         } else if (source == pauseBtn) {
             System.out.println("⬢\t⏸️PAUSE");
             gamePaused = true;
@@ -151,23 +151,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             slowerBtn.setEnabled(false);
             fasterBtn.setEnabled(false);
         } else if (source == slowerBtn) {
-            if (speed < 2000) {
-                speed += 250;
-                System.out.println("⬢\t⏪️SLOWER ⏰ " + speed + " ms");
-                if (speed == 2000) {
-                    slowerBtn.setEnabled(false);
-                }
-            }
-            fasterBtn.setEnabled(true);
+            speedManager(-1);
         } else if (source == fasterBtn) {
-            if (250 < speed) {
-                speed -= 250;
-                System.out.println("⬢\t⏩️FASTER ⏰ " + speed + " ms");
-                if (speed == 250) {
-                    fasterBtn.setEnabled(false);
-                }
-            }
-            slowerBtn.setEnabled(true);
+            speedManager(1);
         }
     }
 
@@ -334,5 +320,60 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 }
             }
         }
+    }
+
+    private void scoreManager(Object object) {
+        score += object.getPoints();
+        scoreLbl.setText(String.valueOf(score));
+    }
+
+    private void speedManager(int controller) {
+        switch (controller) {
+            case -1 -> { // slowerBtn
+                if (speed < 2000) {
+                    speed += 250;
+                    System.out.println("⬢\t⏪️SLOWER ⏰ " + speed + " ms");
+                    if (speed == 2000) {
+                        slowerBtn.setEnabled(false);
+                    }
+                }
+                fasterBtn.setEnabled(true);
+            }
+            case 1 -> { // fasterBtn
+                if (250 < speed) {
+                    speed -= 250;
+                    System.out.println("⬢\t⏩️FASTER ⏰ " + speed + " ms");
+                    if (speed == 250) {
+                        fasterBtn.setEnabled(false);
+                    }
+                }
+                slowerBtn.setEnabled(true);
+                gameOver();
+            }
+        }
+    }
+
+    private void gameOver() {
+        System.out.println("⬢\tGAME OVER");
+        int input = JOptionPane.showConfirmDialog(this, "Score: " + score + "\nDo you want to play another Sweet Swarm?",
+                "SweetSwarm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, iconImg);
+        dispose();
+        if (input == JOptionPane.YES_OPTION) {
+            System.out.println("\n⬢ \uD83D\uDC1D Sweet Swarm \uD83D\uDC1D ⬢");
+            SweetSwarm sweetSwarm = new SweetSwarm();
+        }
+    }
+
+    private void play() {
+        while (!gamePaused && !bees.isEmpty()) {
+            try {
+                System.out.println("⬢\t⏰ TICK");
+                // simulation
+                Thread.sleep(speed);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        gameOver();
     }
 }
