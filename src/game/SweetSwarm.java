@@ -180,6 +180,19 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return cell;
     }
 
+//    private Point positioning(Bee entity) {
+//        Point cell = new Point();
+//        boolean available = true;
+//        while (available) {
+//            cell.x = entity.getCell()[0] + 1;
+//            cell.y = entity.getCell()[1];
+//            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+//                available = false;
+//            }
+//        }
+//        return cell;
+//    }
+
 
     private Point positioning(Point rows, Point cols, String entity) {
         Point cell = new Point();
@@ -380,28 +393,13 @@ public class SweetSwarm extends JFrame implements ActionListener {
             new SweetSwarm();
         }
     }
-//    private Point positioning(Bee entity) {
-//        Point cell = new Point();
-//        boolean available = true;
-//        while (available) {
-//            cell.x = entity.getCell()[0] + 1;
-//            cell.y = entity.getCell()[1];
-//            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-//                available = false;
-//            }
-//        }
-//        return cell;
-//    }
 
-    private void moveBees(){
-        System.out.println("moveBees");
-        for(Bee i : bees){ //
-            System.out.println(i);
-            try {
-                //
-                Thread.sleep(speed); // Makes each Bee move one by one
-                i.setLocation(honeycomb.getMap()[i.getCell()[0]+1][i.getCell()[1]+1].getX(),honeycomb.getMap()[i.getCell()[0]+1][i.getCell()[1]+1].getY());
-
+    private void moveBees() {
+        for (Bee bee : bees) {
+            bee.setLocation(honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getX(), honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getY()); // calc next position (cell)
+            bee.setCell(bee.getCell()[0] + 1, bee.getCell()[1] + 1); // update bee position (cell)
+            try { // delay between bees
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -416,14 +414,14 @@ public class SweetSwarm extends JFrame implements ActionListener {
             }
             System.out.println("⬢\t⏰ TICK");
             timer.setDelay(speed); // timer speed
+            // start simulation
 
-            // simulation [game loop] by Mariana tkm
-            try{
+            moveBees();
+
+            // end simulation
+            try {
                 Thread.sleep(speed);
-                System.out.println("Try");
-                moveBees();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
