@@ -327,6 +327,17 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    public boolean findGuards() {
+        boolean exists = false;
+        for (Bee bee : bees) {
+            if (bee.getClass().getSimpleName().equals("Guard")) {
+                exists = true;
+                break;
+            }
+        }
+        return exists;
+    }
+
     private void scoreManager(Object object) {
         score += object.getPoints();
         scoreLbl.setText(String.valueOf(score));
@@ -370,7 +381,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void play() {
         while (!gamePaused) {
-            if (bees.isEmpty()) { // gameOver condition
+            if (!findGuards()) { // gameOver condition
                 gameOver();
                 break;
             }
