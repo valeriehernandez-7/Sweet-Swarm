@@ -21,6 +21,7 @@ public abstract class Bee extends JLabel {
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
+    public boolean collected = false;
 
     private void detectNearest(){
 
@@ -32,13 +33,12 @@ public abstract class Bee extends JLabel {
                 sweetSwarm.remove(res); // remove the resource from Sweet Swarm window
                 sweetSwarm.honeycomb.getMap()[res.getCell()[0]][res.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
                 sweetSwarm.resources.remove(res); // remove the resource from Sweet Swarm objects list
+                setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
+                setStatus(getStates().get(3)); // status = collecting
+                collected = true;
             }
         }
-        setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
-        setStatus(getStates().get(3)); // status = collecting
-        // move to the honeycomb base
-        Point temp = new Point(7,6);
-        moveToCenter(temp, sweetSwarm.honeycomb);
+
     }
 
 
@@ -64,29 +64,24 @@ public abstract class Bee extends JLabel {
 
         int resultX = this.getCell()[0] - base.x;
         int resultY = this.getCell()[1] - base.y;
-        boolean x = true;
+        System.out.println("Results x = "+ resultX + " y = " + resultY);
 
-        while(x) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) ==0)|(1 - Math.abs(resultX) == 0 & resultY ==0)|(resultX == 0 & 1 - Math.abs(resultY) ==0) ){
-                x = false;
-            }
-            else{
-                if(resultX>0){ this.setCell(this.getCell()[0]-1,this.cell[1]);  }
-                if(resultX<0){ this.setCell(this.getCell()[0]+1,this.cell[1]);  }
-                if(resultY<0){ this.setCell(this.getCell()[0],this.cell[1]+1); }
-                if(resultY>0){ this.setCell(this.getCell()[0],this.cell[1]-1); }
-            }
-            this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY());
+
+        if((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) ==0)|(1 - Math.abs(resultX) == 0 & resultY ==0)|(resultX == 0 & 1 - Math.abs(resultY) ==0) ){
+            collected=false;
+            this.setStatus(getStates().get(1)); }
+        else{
+            if(resultX>0){ this.setCell(this.getCell()[0]-1,this.cell[1]);  }
+            if(resultX<0){ this.setCell(this.getCell()[0]+1,this.cell[1]);  }
+            if(resultY<0){ this.setCell(this.getCell()[0],this.cell[1]+1); }
+            if(resultY>0){ this.setCell(this.getCell()[0],this.cell[1]-1); }
         }
+        this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY());
+    }
 
 
         // calc next position (cell)
-    }
+
 
     public abstract void controller(SweetSwarm sweetSwarm);
 

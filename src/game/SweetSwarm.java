@@ -261,27 +261,24 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void resourceGenerator(Point origin) {
         // calc cell positions based on origin point (main cell)
-//        honeycomb.getMap()[6][5].setEntity("Resource");
-//        objects.add(new Resource(honeycomb.getMap()[6][5].getX(), honeycomb.getMap()[6][5].getY(), 6, 5));
         Point[] cells;
-        cells = new Point[]{new Point(3,7),new Point(3,10)}; //new Point(3,10)
-//        if (origin.x % 2 != 0) {
-//            cells = new Point[]{
-//                    origin, // [R][C]
-//                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-//                    new Point((origin.x - 1), origin.y), // [R-1][C]
-//                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-//                    new Point((origin.x + 1), origin.y) // [R+1][C]
-//            };
-//        } else {
-//            cells = new Point[]{
-//                    origin, // [R][C]
-//                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
-//                    new Point((origin.x - 1), origin.y), // [R-1][C]
-//                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
-//                    new Point((origin.x + 1), origin.y) // [R+1][C]
-//            };
-//        }
+        if (origin.x % 2 != 0) {
+            cells = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        } else {
+            cells = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        }
         // setup resource titles
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
@@ -404,7 +401,14 @@ public class SweetSwarm extends JFrame implements ActionListener {
             // start simulation
 
             for(Bee i: bees){
-                i.moveToCollect(resources.get(0),honeycomb,this);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(i.collected){i.moveToCenter(new Point(7,6),honeycomb);}
+                else{i.moveToCollect(resources.get(0),honeycomb,this);}
+
             }
 
             // end simulation
