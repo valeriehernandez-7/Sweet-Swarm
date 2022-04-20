@@ -48,6 +48,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public final JLabel[] base = new JLabel[7];
     public final List<Bee> bees = new ArrayList<>();
     public final List<Object> objects = new ArrayList<>();
+    public final List<Resource> resources = new ArrayList<>();
 
     /**
      * SweetSwarm class constructor.
@@ -180,20 +181,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return cell;
     }
 
-//    private Point positioning(Bee entity) {
-//        Point cell = new Point();
-//        boolean available = true;
-//        while (available) {
-//            cell.x = entity.getCell()[0] + 1;
-//            cell.y = entity.getCell()[1];
-//            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-//                available = false;
-//            }
-//        }
-//        return cell;
-//    }
-
-
     private Point positioning(Point rows, Point cols, String entity) {
         Point cell = new Point();
         boolean available = true;
@@ -210,7 +197,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void gameSetup() {
         addBase(new Point(7, 6)); // base
-        //addObjects(); // objects
+        addObjects(); // objects
         addBees(); // bees
         addHoneycomb(); // honeycomb
     }
@@ -252,6 +239,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Object obj : objects) {
             getContentPane().add(obj); // display object
         }
+        for(Resource resource: resources){
+            getContentPane().add(resource);
+        }
     }
 
     private void addBees() {
@@ -271,27 +261,30 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void resourceGenerator(Point origin) {
         // calc cell positions based on origin point (main cell)
+//        honeycomb.getMap()[6][5].setEntity("Resource");
+//        objects.add(new Resource(honeycomb.getMap()[6][5].getX(), honeycomb.getMap()[6][5].getY(), 6, 5));
         Point[] cells;
-        if (origin.x % 2 != 0) {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        } else {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        }
+        cells = new Point[]{new Point(3,7),new Point(3,10)}; //new Point(3,10)
+//        if (origin.x % 2 != 0) {
+//            cells = new Point[]{
+//                    origin, // [R][C]
+//                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
+//                    new Point((origin.x - 1), origin.y), // [R-1][C]
+//                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
+//                    new Point((origin.x + 1), origin.y) // [R+1][C]
+//            };
+//        } else {
+//            cells = new Point[]{
+//                    origin, // [R][C]
+//                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
+//                    new Point((origin.x - 1), origin.y), // [R-1][C]
+//                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
+//                    new Point((origin.x + 1), origin.y) // [R+1][C]
+//            };
+//        }
         // setup resource titles
         for (Point cell : cells) {
-            objects.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+            resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
             honeycomb.getMap()[cell.x][cell.y].setEntity("Resource");
         }
     }
@@ -312,24 +305,25 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (int i = 0; i < resourcesAmount; i++) {
             resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
         }
-        // blocks init
-        int blocksAmount = getRandomInteger(10, 16); // 9 < x < 16
-        for (int i = 0; i < blocksAmount; i++) {
-            blockGenerator(positioning("Block"));
-        }
-        // threats init
-        int threatsAmount = getRandomInteger(10, 16); // 9 < x < 16
-        for (int i = 0; i < threatsAmount; i++) {
-            threatGenerator(positioning("Threat"));
-        }
+//        // blocks init
+//        int blocksAmount = getRandomInteger(10, 16); // 9 < x < 16
+//        for (int i = 0; i < blocksAmount; i++) {
+//            blockGenerator(positioning("Block"));
+//        }
+//        // threats init
+//        int threatsAmount = getRandomInteger(10, 16); // 9 < x < 16
+//        for (int i = 0; i < threatsAmount; i++) {
+//            threatGenerator(positioning("Threat"));
+//        }
     }
 
     private void beeGenerator() {
         //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
-        int beesAmount = 1;
+        int beesAmount = 2;
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
-            switch (getRandomInteger(2, 3)) {  // 0 < x < 3
+            //switch (getRandomInteger(0, 3)) {  // 0 < x < 3
+            switch(2){
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
@@ -337,6 +331,10 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 case 2 -> {
                     cell = positioning("Guard");
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+                }
+                case 3 ->{
+                    honeycomb.getMap()[11][7].setEntity("Guard");
+                    bees.add(i, new Guard(honeycomb.getMap()[6][7].getX(), honeycomb.getMap()[6][7].getY(), 6, 7));
                 }
             }
         }
@@ -394,17 +392,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-    private void moveBees() {
-        for (Bee bee : bees) {
-            bee.setLocation(honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getX(), honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getY()); // calc next position (cell)
-            bee.setCell(bee.getCell()[0] + 1, bee.getCell()[1] + 1); // update bee position (cell)
-            try { // delay between bees
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     private void play() {
         while (!gamePaused) {
@@ -416,7 +403,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             timer.setDelay(speed); // timer speed
             // start simulation
 
-            moveBees();
+            for(Bee i: bees){
+                i.moveToCollect(resources.get(0),honeycomb,this);
+            }
 
             // end simulation
             try {
@@ -428,6 +417,18 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 }
 
+//    private void moveBees() {
+//        for (Bee bee : bees) {
+//            bee.setLocation(honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getX(), honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getY()); // calc next position (cell)
+//            bee.setCell(bee.getCell()[0] + 1, bee.getCell()[1] + 1); // update bee position (cell)
+//            try { // delay between bees
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//bee.setLocation(honeycomb.getMap()[p.x][p.y].getX(), honeycomb.getMap()[p.x][p.y].getY()); // calc next position (cell)
 // for (int i=0;i<bees.size();i++){
 //                    //e.collect();
 //
