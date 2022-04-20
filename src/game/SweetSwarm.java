@@ -52,6 +52,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * SweetSwarm class constructor.
+     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
@@ -69,6 +70,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * Instantiate and customize the interface components.
+     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     private void getUIComponents() {
@@ -236,11 +238,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void addObjects() {
         objectGenerator(); // create objects
+        for (Resource resource : resources) { // display resources
+            getContentPane().add(resource);
+        }
         for (Object obj : objects) {
             getContentPane().add(obj); // display object
-        }
-        for(Resource resource: resources){
-            getContentPane().add(resource);
         }
     }
 
@@ -320,7 +322,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
             //switch (getRandomInteger(0, 3)) {  // 0 < x < 3
-            switch(2){
+            switch (2) {
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
@@ -329,7 +331,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     cell = positioning("Guard");
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
-                case 3 ->{
+                case 3 -> {
                     honeycomb.getMap()[11][7].setEntity("Guard");
                     bees.add(i, new Guard(honeycomb.getMap()[6][7].getX(), honeycomb.getMap()[6][7].getY(), 6, 7));
                 }
@@ -389,7 +391,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-
     private void play() {
         while (!gamePaused) {
             if (!findGuards()) { // gameOver condition
@@ -400,17 +401,18 @@ public class SweetSwarm extends JFrame implements ActionListener {
             timer.setDelay(speed); // timer speed
             // start simulation
 
-            for(Bee i: bees){
+            for (Bee bee : bees) {
+                if (bee.getStatus() == bee.getStates().get(3)) {
+                    bee.moveToCenter(new Point(7, 6), honeycomb);
+                } else {
+                    bee.moveToCollect(resources.get(0), honeycomb, this);
+                }
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(i.collected){i.moveToCenter(new Point(7,6),honeycomb);}
-                else{i.moveToCollect(resources.get(0),honeycomb,this);}
-
             }
-
             // end simulation
             try {
                 Thread.sleep(speed);

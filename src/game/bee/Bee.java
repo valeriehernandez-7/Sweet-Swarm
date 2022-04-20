@@ -7,6 +7,7 @@ import game.object.Resource;
 
 import java.awt.Point;
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,73 +22,8 @@ public abstract class Bee extends JLabel {
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
-    public boolean collected = false;
 
-    private void detectNearest(){
-
-    }
-    public void collect(Object res, SweetSwarm sweetSwarm) {
-        if (res.getResistance() > 0) {
-            res.setResistance(res.getResistance() - 1);
-            if (res.getResistance() == 0) {
-                sweetSwarm.remove(res); // remove the resource from Sweet Swarm window
-                sweetSwarm.honeycomb.getMap()[res.getCell()[0]][res.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                sweetSwarm.resources.remove(res); // remove the resource from Sweet Swarm objects list
-                setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
-                setStatus(getStates().get(3)); // status = collecting
-                collected = true;
-            }
-        }
-
-    }
-
-
-    public void moveToCollect(Resource res, Honeycomb honeycomb, SweetSwarm sweetSwarm){
-        Point temp = new Point(res.getCell()[0],res.getCell()[1]);
-
-        int resultX = this.getCell()[0] - temp.x;
-        int resultY = this.getCell()[1] - temp.y;
-
-        if((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) ==0)|(1 - Math.abs(resultX) == 0 & resultY ==0)|(resultX == 0 & 1 - Math.abs(resultY) ==0) ){
-            collect(res,sweetSwarm);
-        }
-        else{
-            if(resultX>0){ this.setCell(this.getCell()[0]-1,this.cell[1]);  }
-            if(resultX<0){ this.setCell(this.getCell()[0]+1,this.cell[1]);  }
-            if(resultY<0){ this.setCell(this.getCell()[0],this.cell[1]+1); }
-            if(resultY>0){ this.setCell(this.getCell()[0],this.cell[1]-1); }
-        }
-
-        this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY()); // calc next position (cell)
-    }
-    public void moveToCenter(Point base, Honeycomb honeycomb){
-
-        int resultX = this.getCell()[0] - base.x;
-        int resultY = this.getCell()[1] - base.y;
-        System.out.println("Results x = "+ resultX + " y = " + resultY);
-
-
-        if((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) ==0)|(1 - Math.abs(resultX) == 0 & resultY ==0)|(resultX == 0 & 1 - Math.abs(resultY) ==0) ){
-            collected=false;
-            this.setStatus(getStates().get(1)); }
-        else{
-            if(resultX>0){ this.setCell(this.getCell()[0]-1,this.cell[1]);  }
-            if(resultX<0){ this.setCell(this.getCell()[0]+1,this.cell[1]);  }
-            if(resultY<0){ this.setCell(this.getCell()[0],this.cell[1]+1); }
-            if(resultY>0){ this.setCell(this.getCell()[0],this.cell[1]-1); }
-        }
-        this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY());
-    }
-
-
-        // calc next position (cell)
-
-
-    public abstract void controller(SweetSwarm sweetSwarm);
-
-
-
-    //Getters and Setters
+    // getters and setters
 
     public int[] getCell() {
         return cell;
@@ -149,6 +85,61 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
+    public void collect(Resource resource, SweetSwarm sweetSwarm) {
+        if (resource.getResistance() > 0) {
+            resource.setResistance(resource.getResistance() - 1);
+            resource.updateStatus();
+            if (resource.getResistance() == 0) {
+                sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
+                sweetSwarm.honeycomb.getMap()[resource.getCell()[0]][resource.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
+                setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
+                setStatus(getStates().get(3)); // status = collecting
+            }
+        }
+        System.out.println(Arrays.toString(resource.getCell()) + " | " +resource.getLocation() + " | " + resource.getResistance() + " | " + resource.getIcon());
+    }
+
+    private void getRoute(int resultX, int resultY) {
+        if (resultX > 0) {
+            this.setCell(this.getCell()[0] - 1, this.cell[1]);
+        }
+        if (resultX < 0) {
+            this.setCell(this.getCell()[0] + 1, this.cell[1]);
+        }
+        if (resultY < 0) {
+            this.setCell(this.getCell()[0], this.cell[1] + 1);
+        }
+        if (resultY > 0) {
+            this.setCell(this.getCell()[0], this.cell[1] - 1);
+        }
+    }
+
+    public void moveToCollect(Resource resource, Honeycomb honeycomb, SweetSwarm sweetSwarm) {
+        int resultX = this.getCell()[0] - resource.getCell()[0];
+        int resultY = this.getCell()[1] - resource.getCell()[1];
+
+        if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
+            collect(resource, sweetSwarm);
+        } else {
+            getRoute(resultX, resultY);
+        }
+        this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY()); // calc next position (cell)
+    }
+
+    public void moveToCenter(Point base, Honeycomb honeycomb) {
+        int resultX = this.getCell()[0] - base.x;
+        int resultY = this.getCell()[1] - base.y;
+//        System.out.println("Results x = " + resultX + " y = " + resultY);
+        if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
+            this.setStatus(getStates().get(1));
+        } else {
+            getRoute(resultX, resultY);
+        }
+        this.setLocation(honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY());
+    }
+
+    public abstract void controller(SweetSwarm sweetSwarm);
 }
 //        if(resultX < 1 & resultY == 0){
 //            this.setCell(this.getCell()[0]+1,this.cell[1]);
