@@ -98,6 +98,27 @@ public abstract class Bee extends JLabel {
         }
     }
 
+    public void nearestResource(List<Resource> res,Honeycomb honeycomb,SweetSwarm sweetSwarm) {
+        if (res.isEmpty()) {
+            System.out.println("You Won"); //Finished game
+        } else {
+            Resource nearestResource = res.get(0);
+            Point resultPoint = new Point(this.getCell()[0] - res.get(0).getCell()[0], this.getCell()[1] - res.get(0).getCell()[1]);
+            for (Resource i : res) {
+                int resultX = this.getCell()[0] - i.getCell()[0];
+                int resultY = this.getCell()[1] - i.getCell()[1];
+
+                if ((resultX <= resultPoint.x & resultY <= resultPoint.y) | (resultX == resultPoint.x & resultY < resultPoint.y) | (resultX < resultPoint.x & resultY == resultPoint.y)) {
+                    nearestResource = i;
+
+                    resultPoint.x = resultX;
+                    resultPoint.y = resultY;
+                }
+            }
+            moveToCollect(nearestResource, honeycomb, sweetSwarm);
+        }
+    }
+
     private void getRoute(int resultX, int resultY) {
         if (resultX > 0) {
             this.setCell(this.getCell()[0] - 1, this.cell[1]);

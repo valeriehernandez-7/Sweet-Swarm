@@ -278,7 +278,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void beeGenerator() {
-        int beesAmount = getRandomInteger(20, 31); // 19 < x < 31
+        //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
+        int beesAmount = 1;
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
             switch (getRandomInteger(1, 3)) {  // 0 < x < 3
@@ -289,6 +290,10 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 case 2 -> {
                     cell = positioning("Guard");
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+                }
+                case 3 -> {
+                    honeycomb.getMap()[11][8].setEntity("Guard");
+                    bees.add(i, new Guard(honeycomb.getMap()[11][8].getX(), honeycomb.getMap()[11][8].getY(), 11, 8));
                 }
             }
         }
@@ -360,7 +365,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 if (bee.getStatus() == bee.getStates().get(3)) {
                     bee.moveToCenter(new Point(7, 6), honeycomb);
                 } else {
-                    bee.moveToCollect(resources.get(0), honeycomb, this);
+                    bee.nearestResource(resources,honeycomb,this);
+                    //bee.moveToCollect(resources.get(0), honeycomb, this);
                 }
                 repaint();
                 try {
