@@ -282,7 +282,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
         int beesAmount = 1;
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
-            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
+            //switch (getRandomInteger(1, 3)) {  // 0 < x < 3
+            switch (3){
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
