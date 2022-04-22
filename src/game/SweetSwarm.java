@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.*;
 
 /**
+ * 
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
@@ -52,7 +53,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * SweetSwarm class constructor.
-     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
@@ -70,7 +70,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * Instantiate and customize the interface components.
-     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     private void getUIComponents() {
@@ -169,43 +168,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
-    private Point positioning(String entity) {
-        Point cell = new Point();
-        boolean available = true;
-        while (available) {
-            cell.x = getRandomInteger(1, 15);  // 0 < x < 15
-            cell.y = getRandomInteger(1, 13); // 0 < x < 13
-            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
-                available = false;
-            }
-        }
-        return cell;
-    }
-
-    private Point positioning(Point rows, Point cols, String entity) {
-        Point cell = new Point();
-        boolean available = true;
-        while (available) {
-            cell.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
-            cell.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
-            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
-                available = false;
-            }
-        }
-        return cell;
-    }
-
-    private void gameSetup() {
-        addBase(new Point(7, 6)); // base
-        addObjects(); // objects
-        addBees(); // bees
-        addHoneycomb(); // honeycomb
-    }
-
-    private void addBase(Point origin) {
-        // calc cell positions based on origin point (main cell)
+    private Point[] getNeighbors(Point origin) {
         Point[] cells;
         if (origin.x % 2 != 0) {
             cells = new Point[]{
@@ -228,6 +191,59 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     new Point((origin.x + 1), origin.y) // [R+1][C]
             };
         }
+        return cells;
+    }
+
+    private boolean areNeighborsAvailable(Point origin) {
+        Point[] cells = getNeighbors(origin);
+        boolean available = true;
+        for (Point cell : cells) {
+            if (!honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+                available = false;
+                break;
+            }
+        }
+        return available;
+    }
+
+    private Point positioning(String entity) {
+        Point cell = new Point();
+        boolean available = true;
+        while (available) {
+            cell.x = getRandomInteger(1, 15);  // 0 < x < 15
+            cell.y = getRandomInteger(1, 13); // 0 < x < 13
+            if (honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
+                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
+                available = false;
+            }
+        }
+        return cell;
+    }
+
+    private Point positioning(Point rows, Point cols, String entity) {
+        Point cell = new Point();
+        boolean available = true;
+        while (available) {
+            cell.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
+            cell.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
+            if (honeycomb.getMap()[cell.x][cell.y].isAvailable() && areNeighborsAvailable(new Point(cell.x, cell.y))) {
+                honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
+                available = false;
+            }
+        }
+        return cell;
+    }
+
+    private void gameSetup() {
+        addBase(new Point(7, 6)); // base
+        addObjects(); // objects
+        addBees(); // bees
+        addHoneycomb(); // honeycomb
+    }
+
+    private void addBase(Point origin) {
+        // calc cell positions based on origin point (main cell)
+        Point[] cells = getNeighbors(origin);
         // setup base titles
         for (int i = 0; i < base.length; i++) {
             base[i] = labelSetup(baseImg, honeycomb.getMap()[cells[i].x][cells[i].y].getX(), honeycomb.getMap()[cells[i].x][cells[i].y].getY(), true); // base titles JLabel setup
@@ -263,24 +279,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void resourceGenerator(Point origin) {
         // calc cell positions based on origin point (main cell)
-        Point[] cells;
-        if (origin.x % 2 != 0) {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        } else {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        }
+        Point[] cells = getNeighbors(origin);
         // setup resource titles
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));

@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
@@ -97,7 +96,7 @@ public abstract class Bee extends JLabel {
                 setStatus(getStates().get(3)); // status = collecting
             }
         }
-        System.out.println(Arrays.toString(resource.getCell()) + " | " +resource.getLocation() + " | " + resource.getResistance() + " | " + resource.getIcon());
+        sweetSwarm.repaint();
     }
 
     private void getRoute(int resultX, int resultY) {
