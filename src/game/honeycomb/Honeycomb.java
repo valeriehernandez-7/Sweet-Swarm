@@ -47,7 +47,6 @@ public class Honeycomb {
         int halfCell = cellWidth / 2; // honeycomb half cell width
         int cellXPos, cellYPos; // honeycomb cell position
         for (int row = 0; row < map.length; row++) {
-//            System.out.println("\n");
             for (int col = 0; col < map[row].length; col++) {
                 if (row % 2 == 0) {
                     cellXPos = position.x + (halfCell + (col * cellWidth));
@@ -60,9 +59,45 @@ public class Honeycomb {
                     cellYPos = position.y;
                 }
                 map[row][col].setLocation(cellXPos, cellYPos);
-//                System.out.print("\t\t  MAP [" + row + "," + col + "] | POS (" + map[row][col].getX() + "," + map[row][col].getY() + ")");
             }
         }
-//        System.out.println("\n");
+    }
+
+    public Point[] getNeighbors(Point origin) {
+        Point[] cells;
+        if (origin.x % 2 != 0) {
+            cells = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        } else {
+            cells = new Point[]{
+                    origin, // [R][C]
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
+                    new Point((origin.x - 1), origin.y), // [R-1][C]
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
+                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
+                    new Point((origin.x + 1), origin.y) // [R+1][C]
+            };
+        }
+        return cells;
+    }
+
+    public boolean areNeighborsAvailable(Point origin) {
+        Point[] cells = getNeighbors(origin);
+        boolean available = true;
+        for (Point cell : cells) {
+            if (!getMap()[cell.x][cell.y].isAvailable()) {
+                available = false;
+                break;
+            }
+        }
+        return available;
     }
 }

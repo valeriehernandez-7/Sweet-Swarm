@@ -168,44 +168,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
-    private Point[] getNeighbors(Point origin) {
-        Point[] cells;
-        if (origin.x % 2 != 0) {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
-                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
-                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        } else {
-            cells = new Point[]{
-                    origin, // [R][C]
-                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] *
-                    new Point((origin.x - 1), origin.y), // [R-1][C]
-                    new Point(origin.x, (origin.y - 1)), // [R][C-1]
-                    new Point(origin.x, (origin.y + 1)), // [R][C+1]
-                    new Point((origin.x + 1), (origin.y + 1)), // [R+1][C+1] *
-                    new Point((origin.x + 1), origin.y) // [R+1][C]
-            };
-        }
-        return cells;
-    }
-
-    private boolean areNeighborsAvailable(Point origin) {
-        Point[] cells = getNeighbors(origin);
-        boolean available = true;
-        for (Point cell : cells) {
-            if (!honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-                available = false;
-                break;
-            }
-        }
-        return available;
-    }
-
     private Point positioning(String entity) {
         Point cell = new Point();
         boolean available = true;
@@ -226,7 +188,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         while (available) {
             cell.x = getRandomInteger(rows.x, rows.y); // row min < x < row max
             cell.y = getRandomInteger(cols.x, cols.y); // column min < x < column max
-            if (honeycomb.getMap()[cell.x][cell.y].isAvailable() && areNeighborsAvailable(new Point(cell.x, cell.y))) {
+            if (honeycomb.getMap()[cell.x][cell.y].isAvailable() && honeycomb.areNeighborsAvailable(new Point(cell.x, cell.y))) {
                 honeycomb.getMap()[cell.x][cell.y].setEntity(entity);
                 available = false;
             }
@@ -243,7 +205,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void addBase(Point origin) {
         // calc cell positions based on origin point (main cell)
-        Point[] cells = getNeighbors(origin);
+        Point[] cells = honeycomb.getNeighbors(origin);
         // setup base titles
         for (int i = 0; i < base.length; i++) {
             base[i] = labelSetup(baseImg, honeycomb.getMap()[cells[i].x][cells[i].y].getX(), honeycomb.getMap()[cells[i].x][cells[i].y].getY(), true); // base titles JLabel setup
@@ -279,7 +241,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void resourceGenerator(Point origin) {
         // calc cell positions based on origin point (main cell)
-        Point[] cells = getNeighbors(origin);
+        Point[] cells = honeycomb.getNeighbors(origin);
         // setup resource titles
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
