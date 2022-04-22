@@ -96,7 +96,6 @@ public abstract class Bee extends JLabel {
                 setStatus(getStates().get(3)); // status = collecting
             }
         }
-        sweetSwarm.repaint();
     }
 
     private void getRoute(int resultX, int resultY) {
