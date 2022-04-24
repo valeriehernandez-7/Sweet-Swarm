@@ -92,4 +92,16 @@ public class Honeycomb {
         }
         return available;
     }
+
+    public Point getNeighborAvailable(Point origin) {
+        Point[] cells = getNeighbors(origin);
+        Point cellAvailable = null;
+        for (Point cell : cells) {
+            if (getMap()[cell.x][cell.y].isAvailable()) {
+                cellAvailable = cell;
+                break;
+            }
+        }
+        return cellAvailable;
+    }
 }
