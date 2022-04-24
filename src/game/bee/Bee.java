@@ -139,13 +139,13 @@ public abstract class Bee extends JLabel {
     }
 
     public void moveToCollect(Resource resource, SweetSwarm sweetSwarm) {
-        int resultX = getCell()[0] - resource.getCell()[0];
-        int resultY = getCell()[1] - resource.getCell()[1];
+        int row = getCell()[0] - resource.getCell()[0];
+        int column = getCell()[1] - resource.getCell()[1];
 
-        if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
+        if ((1 - Math.abs(row) == 0 & 1 - Math.abs(column) == 0) | (1 - Math.abs(row) == 0 & column == 0) | (row == 0 & 1 - Math.abs(column) == 0)) {
             collect(resource, sweetSwarm);
         } else {
-            setCell(getRoute(resultX, resultY).x, getRoute(resultX, resultY).y);
+            setCell(getRoute(row, column).x, getRoute(row, column).y);
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY()); // calc next position (cell)
     }
@@ -157,7 +157,7 @@ public abstract class Bee extends JLabel {
             setStatus(getStates().get(1));
             sweetSwarm.score += sweetSwarm.resources.get(0).getPoints();
         } else {
-            getRoute(row, column);
+            setCell(getRoute(row, column).x, getRoute(row, column).y);
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
     }
