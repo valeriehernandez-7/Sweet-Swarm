@@ -2,6 +2,7 @@ package game.bee;
 
 import game.SweetSwarm;
 import game.object.Resource;
+import game.object.Threat;
 
 import java.awt.Point;
 import javax.swing.*;
@@ -17,7 +18,7 @@ public abstract class Bee extends JLabel {
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
-    protected List<String> states = List.of("dead", "looking", "attacking", "collecting"); // bee states
+    protected List<String> states = List.of("dead", "looking", "attacking", "collecting","following"); // bee states
 
     // getters and setters
 
@@ -151,8 +152,12 @@ public abstract class Bee extends JLabel {
     }
 
     public void moveToCenter(SweetSwarm sweetSwarm) {
+        System.out.println(sweetSwarm.base[0].getX());
+        System.out.println(getCell()[0]);
+
         int row = Math.abs(getCell()[0] - sweetSwarm.base[0].getX());
         int column = Math.abs(getCell()[1] - sweetSwarm.base[0].getY());
+
         if ((1 - row == 0 & 1 - column == 0) | (1 - row == 0 & column == 0) | (row == 0 & 1 - column == 0)) {
             setStatus(getStates().get(1));
             sweetSwarm.score += sweetSwarm.resources.get(0).getPoints();
