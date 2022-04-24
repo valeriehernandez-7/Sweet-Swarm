@@ -143,8 +143,8 @@ public abstract class Bee extends JLabel {
             System.out.println(" BEST NEIGHBORS " + Arrays.toString(bestCellNeighbors));
             Point[] originCellNeighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]));
             System.out.println(" ORIGIN NEIGHBORS " + Arrays.toString(originCellNeighbors));
-            for (Point bestCellNeighbor: bestCellNeighbors) {
-                for (Point originCellNeighbor: originCellNeighbors) {
+            for (Point bestCellNeighbor : bestCellNeighbors) {
+                for (Point originCellNeighbor : originCellNeighbors) {
                     if (bestCellNeighbor == originCellNeighbor) {
                         bestCell.setLocation(bestCellNeighbor.x, bestCellNeighbor.y);
                         break;
@@ -179,14 +179,15 @@ public abstract class Bee extends JLabel {
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
     }
+
     public void controller(SweetSwarm sweetSwarm) {
-        switch(this.getStatus()){
-            case "looking" -> {this.nearestResource(sweetSwarm);}
-            case "collecting" -> {this.moveToCenter(sweetSwarm);}
-            case "attacking" -> {this.attackResponse(sweetSwarm);}
+        switch (this.getStatus()) {
+            case "looking" -> this.nearestResource(sweetSwarm);
+            case "collecting" -> this.moveToCenter(sweetSwarm);
+            case "attacking" -> this.attackResponse(sweetSwarm);
         }
     }
 
     public abstract void attackResponse(SweetSwarm sweetSwarm);
-    
+
 }

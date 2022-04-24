@@ -1,10 +1,8 @@
 package game.bee;
 
 import game.SweetSwarm;
-import game.object.Threat;
 
 /**
- *
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
 public class Collector extends Bee {
@@ -18,8 +16,5 @@ public class Collector extends Bee {
     }
 
     @Override
-    public void attackResponse(SweetSwarm sweetSwarm){
-
-    }
-
+    public void attackResponse(SweetSwarm sweetSwarm) {}
 }

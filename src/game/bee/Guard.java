@@ -3,10 +3,7 @@ package game.bee;
 import game.SweetSwarm;
 import game.object.Threat;
 
-import java.awt.*;
-
 /**
- *
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
 public class Guard extends Bee {
@@ -20,25 +17,24 @@ public class Guard extends Bee {
     }
 
     @Override
-    public void attackResponse(SweetSwarm sweetSwarm){
-        for(Threat e: sweetSwarm.threats){
-            if(this.getCell().equals(e.getCell())){
-                e.setResistance(e.getResistance()-this.getPower());
-                this.setHealth(this.getHealth()-e.getPower());
-                if(e.getResistance()==0){
-                    sweetSwarm.remove(e); // remove the resource from Sweet Swarm window
-                    sweetSwarm.honeycomb.getMap()[e.getCell()[0]][e.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                    sweetSwarm.resources.remove(e);
+    public void attackResponse(SweetSwarm sweetSwarm) {
+        for (Threat threat : sweetSwarm.threats) {
+            if (this.getCell() == threat.getCell()) {
+                threat.setResistance(threat.getResistance() - this.getPower());
+                this.setHealth(this.getHealth() - threat.getPower());
+                if (threat.getResistance() == 0) {
+                    sweetSwarm.remove(threat); // remove threat from Sweet Swarm window
+                    sweetSwarm.honeycomb.getMap()[threat.getCell()[0]][threat.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                    sweetSwarm.threats.remove(threat);
                     this.setStatus(this.getStates().get(1));
                 }
-                if(this.getHealth()==0){
-                    sweetSwarm.remove(this); // remove the resource from Sweet Swarm window
+                if (this.getHealth() == 0) {
+                    sweetSwarm.remove(this); // remove bee from Sweet Swarm window
                     sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                    sweetSwarm.resources.remove(this);
+                    sweetSwarm.bees.remove(this);
                 }
                 break;
             }
         }
     }
-
 }
