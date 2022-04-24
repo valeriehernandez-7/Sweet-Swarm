@@ -16,6 +16,11 @@ public class Collector extends Bee {
         this.setStatus(this.getStates().get(1));
     }
 
+    @Override
+    public void attackResponse(SweetSwarm sweetSwarm) {
+    }
+
+    @Override
     public void controller(SweetSwarm sweetSwarm) {
     }
 }
