@@ -5,7 +5,6 @@ import game.honeycomb.Honeycomb;
 import game.bee.Bee;
 import game.bee.Collector;
 import game.bee.Guard;
-import game.object.Object;
 import game.object.Block;
 import game.object.Resource;
 import game.object.Threat;
@@ -45,10 +44,12 @@ public class SweetSwarm extends JFrame implements ActionListener {
     public int score = 0;
     // game components
     public final Honeycomb honeycomb = new Honeycomb(307, 98);
+    public final Point center = new Point(7, 6);
     public final JLabel[] base = new JLabel[7];
     public final List<Bee> bees = new ArrayList<>();
-    public final List<Object> objects = new ArrayList<>();
+    public final List<Block> blocks = new ArrayList<>();
     public final List<Resource> resources = new ArrayList<>();
+    public final List<Threat> threats = new ArrayList<>();
 
     /**
      * SweetSwarm class constructor.
@@ -70,6 +71,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * Instantiate and customize the interface components.
+     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     private void getUIComponents() {
@@ -197,7 +199,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void gameSetup() {
-        addBase(new Point(7, 6)); // base
+        addBase(center); // base
         addObjects(); // objects
         addBees(); // bees
         addHoneycomb(); // honeycomb
@@ -219,8 +221,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Resource resource : resources) { // display resources
             getContentPane().add(resource);
         }
-        for (Object obj : objects) {
-            getContentPane().add(obj); // display object
+        for (Block block : blocks) {
+            getContentPane().add(block); // display block
+        }
+        for (Threat threat : threats) {
+            getContentPane().add(threat); // display threat
         }
     }
 
@@ -250,12 +255,12 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void blockGenerator(Point cell) {
-        objects.add(new Block(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+        blocks.add(new Block(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
         honeycomb.getMap()[cell.x][cell.y].setEntity("Block");
     }
 
     private void threatGenerator(Point cell) {
-        objects.add(new Threat(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+        threats.add(new Threat(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
         honeycomb.getMap()[cell.x][cell.y].setEntity("Threat");
     }
 
@@ -283,7 +288,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
 //            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
-            switch (2){
+            switch (2) {
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));

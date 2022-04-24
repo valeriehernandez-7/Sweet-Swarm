@@ -29,6 +29,5 @@ public class Collector extends Bee {
             case "collecting" -> {this.moveToCenter(sweetSwarm);}
             case "attacking" -> {this.attackResponse(sweetSwarm);}
         }
-
     }
 }

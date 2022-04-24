@@ -18,7 +18,7 @@ public abstract class Bee extends JLabel {
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
-    protected List<String> states = List.of("dead", "looking", "attacking", "collecting","following"); // bee states
+    protected List<String> states = List.of("dead", "looking", "attacking", "collecting", "following"); // bee states
 
     // getters and setters
 
@@ -140,10 +140,9 @@ public abstract class Bee extends JLabel {
     }
 
     public void moveToCollect(Resource resource, SweetSwarm sweetSwarm) {
-        int row = getCell()[0] - resource.getCell()[0];
-        int column = getCell()[1] - resource.getCell()[1];
-
-        if ((1 - Math.abs(row) == 0 & 1 - Math.abs(column) == 0) | (1 - Math.abs(row) == 0 & column == 0) | (row == 0 & 1 - Math.abs(column) == 0)) {
+        int row = Math.abs(getCell()[0] - resource.getCell()[0]);
+        int column = Math.abs(getCell()[1] - resource.getCell()[1]);
+        if ((1 - row == 0 & 1 - column == 0) | (1 - row == 0 & column == 0) | (row == 0 & 1 - column == 0)) {
             collect(resource, sweetSwarm);
         } else {
             setCell(getRoute(row, column).x, getRoute(row, column).y);
@@ -152,12 +151,8 @@ public abstract class Bee extends JLabel {
     }
 
     public void moveToCenter(SweetSwarm sweetSwarm) {
-        System.out.println(sweetSwarm.base[0].getX());
-        System.out.println(getCell()[0]);
-
-        int row = Math.abs(getCell()[0] - sweetSwarm.base[0].getX());
-        int column = Math.abs(getCell()[1] - sweetSwarm.base[0].getY());
-
+        int row = Math.abs(getCell()[0] - sweetSwarm.center.x);
+        int column = Math.abs(getCell()[1] - sweetSwarm.center.y);
         if ((1 - row == 0 & 1 - column == 0) | (1 - row == 0 & column == 0) | (row == 0 & 1 - column == 0)) {
             setStatus(getStates().get(1));
             sweetSwarm.score += sweetSwarm.resources.get(0).getPoints();
