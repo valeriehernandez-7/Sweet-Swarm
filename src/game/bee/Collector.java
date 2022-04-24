@@ -18,18 +18,17 @@ public class Collector extends Bee {
     }
 
     @Override
-    public void attackResponse(SweetSwarm sweetSwarm){}
+    public void attackResponse(SweetSwarm sweetSwarm){
+
+    }
 
     @Override
     public void controller(SweetSwarm sweetSwarm) {
-        if(this.getStatus() == this.getStates().get(1)){
-            this.nearestResource(sweetSwarm);
+        switch(this.getStatus()){
+            case "looking" -> {this.nearestResource(sweetSwarm);}
+            case "collecting" -> {this.moveToCenter(sweetSwarm);}
+            case "attacking" -> {this.attackResponse(sweetSwarm);}
         }
-        else if(this.getStatus() == this.getStates().get(2)){
-            this.attackResponse(sweetSwarm);
-        }
-        else if(this.getStatus() == this.getStates().get(3)){
-            this.moveToCenter(sweetSwarm);
-        }
+
     }
 }
