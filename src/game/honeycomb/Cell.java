@@ -18,7 +18,7 @@ public class Cell extends JLabel {
         setIcon(new ImageIcon("src/resources/img/__honeycomb-item.png"));
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                System.out.println("⬢\t" + getEntity().toUpperCase() + " [" + getX() + "," + getY() + "]");
+                System.out.println("⬢\t" + getEntity().toUpperCase() + " [" + getX() + "," + getY() + "] | AVAILABLE " + isAvailable());
             }
         });
     }
