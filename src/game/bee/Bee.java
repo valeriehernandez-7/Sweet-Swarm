@@ -122,47 +122,8 @@ public abstract class Bee extends JLabel {
             moveToCollect(nearestResource, sweetSwarm);
         }
     }
-
-//    private void getRoute(int resultX, int resultY) {
-//        //honeycomb.getMap()[cell.x][cell.y].isAvailable()) {
-//        //                honeycomb.getMap()[cell.x][cell.y].setEntity(entity)
-//
-//        if((resultX > 0 &  resultY < 0) |(resultX > 0 &  resultY > 0)|(resultX < 0 &  resultY < 0)|(resultX < 0 &  resultY > 0)) {
-//
-//            if (resultX > 0 & resultY < 0) {
-//                this.setCell(this.getCell()[0] - 1, this.cell[1]+1);
-//
-//            }
-//            else if (resultX > 0 & resultY > 0) {
-//                this.setCell(this.getCell()[0] - 1, this.cell[1]-1);
-//            }
-//            else if (resultX < 0 & resultY < 0) {
-//                this.setCell(this.getCell()[0] + 1, this.cell[1]+1);
-//            }
-//            else if (resultX < 0 & resultY > 0) {
-//                this.setCell(this.getCell()[0] + 1, this.cell[1] -1);
-//            }
-//        }
-//        else if((resultX > 0)|(resultX < 0)|(resultY < 0)|(resultY > 0)){
-//            if(resultX > 0){
-//                this.setCell(this.getCell()[0] - 1, this.cell[1]);
-//            }
-//            if (resultX < 0) {
-//                this.setCell(this.getCell()[0] + 1, this.cell[1]);
-//        }
-//            if (resultY < 0) {
-//                this.setCell(this.getCell()[0], this.cell[1] + 1);
-//        }
-//            if (resultY > 0) {
-//                this.setCell(this.getCell()[0], this.cell[1] - 1);
-//            }
-//        }
-//        else{
-//            System.out.println("no new route");
-//        }
-//
-//    }
-    private void getRoute(int resultX, int resultY, Honeycomb honeycomb) {
+    
+    private Point getRoute(int resultX, int resultY, Honeycomb honeycomb) {
         int x = 0;
         int y = 0;
 
@@ -181,8 +142,9 @@ public abstract class Bee extends JLabel {
         }
 
         bestPath.move(this.getCell()[0] +x,this.cell[1]+y);
+        return  bestPath;
 
-        honeycomb.getNeighbors(bestPath);
+        //honeycomb.getNeighbors(bestPath);
         //llamar a check escarabajo
         //devuelba un punto
         //si el punto no esta available. vecinos del punto, si comparte vecinos con el punto original pfijese si alguno esta disponible y si lo esta vayase al primero. reiterativo fijese
@@ -195,7 +157,8 @@ public abstract class Bee extends JLabel {
         if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
             collect(resource, sweetSwarm);
         } else {
-            getRoute(resultX, resultY, sweetSwarm.honeycomb);
+            Point newPath = getRoute(resultX, resultY, sweetSwarm.honeycomb);
+            this.setCell(newPath.x, newPath.y);
         }
         this.setLocation(sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(),sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY()); // calc next position (cell)
     }
