@@ -1,13 +1,10 @@
 package game.bee;
 
 import game.SweetSwarm;
-import game.honeycomb.Honeycomb;
-import game.object.Object;
 import game.object.Resource;
 
 import java.awt.Point;
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -94,55 +91,46 @@ public abstract class Bee extends JLabel {
                 sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
                 setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
                 setStatus(getStates().get(3)); // status = collecting
-
-                //respawnee
+                // create new resource
             }
         }
     }
 
-    public void nearestResource(List<Resource> res,Honeycomb honeycomb,SweetSwarm sweetSwarm) {
-        if (res.isEmpty()) {
-            System.out.println("you won B)");
-            //Finished game
-
+    public void nearestResource(SweetSwarm sweetSwarm) {
+        if (sweetSwarm.resources.isEmpty()) {
+            System.out.println("NO RESOURCES AVAILABLE");
         } else {
-            Resource nearestResource = res.get(0);
-            Point resultPoint = new Point(this.getCell()[0] - res.get(0).getCell()[0], this.getCell()[1] - res.get(0).getCell()[1]);
-            for (Resource i : res) {
-                int resultX = this.getCell()[0] - i.getCell()[0];
-                int resultY = this.getCell()[1] - i.getCell()[1];
-
-                if ((resultX <= resultPoint.x & resultY <= resultPoint.y) | (resultX == resultPoint.x & resultY < resultPoint.y) | (resultX < resultPoint.x & resultY == resultPoint.y)) {
-                    nearestResource = i;
-
-                    resultPoint.x = resultX;
-                    resultPoint.y = resultY;
+            Resource nearestResource = sweetSwarm.resources.get(0);
+            Point resultCell = new Point(getCell()[0] - sweetSwarm.resources.get(0).getCell()[0], getCell()[1] - sweetSwarm.resources.get(0).getCell()[1]);
+            for (Resource resource : sweetSwarm.resources) {
+                int resultRow = getCell()[0] - resource.getCell()[0];
+                int resultColumn = getCell()[1] - resource.getCell()[1];
+                if ((resultRow <= resultCell.x & resultColumn <= resultCell.y) | (resultRow == resultCell.x & resultColumn < resultCell.y) | (resultRow < resultCell.x & resultColumn == resultCell.y)) {
+                    nearestResource = resource;
+                    resultCell.x = resultRow;
+                    resultCell.y = resultColumn;
                 }
             }
             moveToCollect(nearestResource, sweetSwarm);
         }
     }
-    
-    private Point getRoute(int resultX, int resultY, Honeycomb honeycomb) {
-        int x = 0;
-        int y = 0;
 
-        Point bestPath = new Point();
-        if (resultX > 0) {
-            x = -1;
+    private Point getRoute(int row, int column) {
+        int cellRow = 0;
+        int cellColumn = 0;
+        if (row > 0) {
+            cellRow = -1;
         }
-        if (resultX < 0) {
-            x = 1;
+        if (row < 0) {
+            cellRow = 1;
         }
-        if (resultY < 0) {
-            y = 1;
+        if (column < 0) {
+            cellColumn = 1;
         }
-        if (resultY > 0) {
-            y = -1;
+        if (column > 0) {
+            cellColumn = -1;
         }
-
-        bestPath.move(this.getCell()[0] +x,this.cell[1]+y);
-        return  bestPath;
+        return new Point(getCell()[0] + cellRow, cell[1] + cellColumn);
 
         //honeycomb.getNeighbors(bestPath);
         //llamar a check escarabajo
@@ -150,31 +138,31 @@ public abstract class Bee extends JLabel {
         //si el punto no esta available. vecinos del punto, si comparte vecinos con el punto original pfijese si alguno esta disponible y si lo esta vayase al primero. reiterativo fijese
     }
 
-    public void moveToCollect(Resource resource,SweetSwarm sweetSwarm) {
-        int resultX = this.getCell()[0] - resource.getCell()[0];
-        int resultY = this.getCell()[1] - resource.getCell()[1];
+    public void moveToCollect(Resource resource, SweetSwarm sweetSwarm) {
+        int row = getCell()[0] - resource.getCell()[0];
+        int column = getCell()[1] - resource.getCell()[1];
 
-        if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
+        if ((1 - Math.abs(row) == 0 & 1 - Math.abs(column) == 0) | (1 - Math.abs(row) == 0 & column == 0) | (row == 0 & 1 - Math.abs(column) == 0)) {
             collect(resource, sweetSwarm);
         } else {
-            Point newPath = getRoute(resultX, resultY, sweetSwarm.honeycomb);
-            this.setCell(newPath.x, newPath.y);
+            setCell(getRoute(row, column).x, getRoute(row, column).y);
         }
-        this.setLocation(sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(),sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY()); // calc next position (cell)
+        setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY()); // calc next position (cell)
     }
 
-    public void moveToCenter( SweetSwarm sweetSwarm) {
-        int resultX = this.getCell()[0] - sweetSwarm.base[0].getX();
-        int resultY = this.getCell()[1] - sweetSwarm.base[0].getY();
-//        System.out.println("Results x = " + resultX + " y = " + resultY);
-        if ((1 - Math.abs(resultX) == 0 & 1 - Math.abs(resultY) == 0) | (1 - Math.abs(resultX) == 0 & resultY == 0) | (resultX == 0 & 1 - Math.abs(resultY) == 0)) {
-            this.setStatus(getStates().get(1));
-            sweetSwarm.score += 100;
+    public void moveToCenter(SweetSwarm sweetSwarm) {
+        int row = Math.abs(getCell()[0] - sweetSwarm.base[0].getX());
+        int column = Math.abs(getCell()[1] - sweetSwarm.base[0].getY());
+        if ((1 - row == 0 & 1 - column == 0) | (1 - row == 0 & column == 0) | (row == 0 & 1 - column == 0)) {
+            setStatus(getStates().get(1));
+            sweetSwarm.score += sweetSwarm.resources.get(0).getPoints();
         } else {
-            getRoute(resultX, resultY,sweetSwarm.honeycomb);
+            setCell(getRoute(row, column).x, getRoute(row, column).y);
         }
-        this.setLocation(sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].getY());
+        setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
     }
+
+    public abstract void attackResponse(SweetSwarm sweetSwarm);
 
     public abstract void controller(SweetSwarm sweetSwarm);
 }

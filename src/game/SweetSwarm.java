@@ -18,7 +18,6 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- * 
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
@@ -53,6 +52,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     /**
      * SweetSwarm class constructor.
+     *
      * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
      */
     public SweetSwarm() {
@@ -246,7 +246,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
             honeycomb.getMap()[cell.x][cell.y].setEntity("Resource");
-            break;
         }
     }
 
@@ -262,20 +261,17 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void objectGenerator() {
         // resources init
-        //int resourcesAmount = getRandomInteger(3, 5); // 2 < x < 5
-        int resourcesAmount = 1;
+        int resourcesAmount = getRandomInteger(3, 5); // 2 < x < 5
         for (int i = 0; i < resourcesAmount; i++) {
             resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
         }
         // blocks init
-        //int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
-//        int blocksAmount = 1;
-//        for (int i = 0; i < blocksAmount; i++) {
-//            blockGenerator(positioning("Block"));
-//        }
+        int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
+        for (int i = 0; i < blocksAmount; i++) {
+            blockGenerator(positioning("Block"));
+        }
         // threats init
-       // int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
-        int threatsAmount = 1;
+        int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
         for (int i = 0; i < threatsAmount; i++) {
             threatGenerator(positioning("Threat"));
         }
@@ -286,8 +282,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
         int beesAmount = 2;
         for (int i = 0; i < beesAmount; i++) {
             Point cell;
-            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
-            //switch (3){
+//            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
+            switch (2){
                 case 1 -> {
                     cell = positioning("Collector");
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
@@ -295,10 +291,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 case 2 -> {
                     cell = positioning("Guard");
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
-                }
-                case 3 -> {
-                    honeycomb.getMap()[11][8].setEntity("Guard");
-                    bees.add(i, new Guard(honeycomb.getMap()[11][8].getX(), honeycomb.getMap()[11][8].getY(), 11, 8));
                 }
             }
         }
@@ -363,11 +355,12 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
             for (Bee bee : bees) {
                 if (bee.getStatus() == bee.getStates().get(3)) {
-                    bee.moveToCenter( this);
+                    bee.moveToCenter(this);
                 } else {
-                    bee.nearestResource(resources,honeycomb,this);
+                    bee.nearestResource(this);
                     //bee.moveToCollect(resources.get(0), honeycomb, this);
                 }
+//                bee.controller(this);
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
                 try {
