@@ -385,29 +385,3 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 }
-
-//    private void moveBees() {
-//        for (Bee bee : bees) {
-//            bee.setLocation(honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getX(), honeycomb.getMap()[bee.getCell()[0] + 1][bee.getCell()[1] + 1].getY()); // calc next position (cell)
-//            bee.setCell(bee.getCell()[0] + 1, bee.getCell()[1] + 1); // update bee position (cell)
-//            try { // delay between bees
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//bee.setLocation(honeycomb.getMap()[p.x][p.y].getX(), honeycomb.getMap()[p.x][p.y].getY()); // calc next position (cell)
-// for (int i=0;i<bees.size();i++){
-//                    //e.collect();
-//
-//                    try{
-//                        System.out.println(i);
-//                        bees.get(i).collect(objects.get(i),this); }
-//                    catch (IndexOutOfBoundsException e){
-//                        break;
-//                        //System.out.println("paso aca");
-//                        //bees.get(i).collect(objects.get(i),this);
-//                    }
-
-//i.setLocation(honeycomb.getMap()[i.getCell()[cell.x]][i.getCell()[cell.y]].getX(),honeycomb.getMap()[i.getCell()[cell.x]][i.getCell()[cell.y]].getY());
