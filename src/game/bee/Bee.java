@@ -179,8 +179,14 @@ public abstract class Bee extends JLabel {
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
     }
+    public void controller(SweetSwarm sweetSwarm) {
+        switch(this.getStatus()){
+            case "looking" -> {this.nearestResource(sweetSwarm);}
+            case "collecting" -> {this.moveToCenter(sweetSwarm);}
+            case "attacking" -> {this.attackResponse(sweetSwarm);}
+        }
+    }
 
     public abstract void attackResponse(SweetSwarm sweetSwarm);
-
-    public abstract void controller(SweetSwarm sweetSwarm);
+    
 }

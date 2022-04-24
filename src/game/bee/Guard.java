@@ -3,6 +3,8 @@ package game.bee;
 import game.SweetSwarm;
 import game.object.Threat;
 
+import java.awt.*;
+
 /**
  *
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
@@ -19,15 +21,24 @@ public class Guard extends Bee {
 
     @Override
     public void attackResponse(SweetSwarm sweetSwarm){
-
-    }
-
-    @Override
-    public void controller(SweetSwarm sweetSwarm) {
-        switch(this.getStatus()){
-            case "looking" -> {this.nearestResource(sweetSwarm);}
-            case "collecting" -> {this.moveToCenter(sweetSwarm);}
-            case "attacking" -> {this.attackResponse(sweetSwarm);}
+        for(Threat e: sweetSwarm.threats){
+            if(this.getCell().equals(e.getCell())){
+                e.setResistance(e.getResistance()-this.getPower());
+                this.setHealth(this.getHealth()-e.getPower());
+                if(e.getResistance()==0){
+                    sweetSwarm.remove(e); // remove the resource from Sweet Swarm window
+                    sweetSwarm.honeycomb.getMap()[e.getCell()[0]][e.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                    sweetSwarm.resources.remove(e);
+                    this.setStatus(this.getStates().get(1));
+                }
+                if(this.getHealth()==0){
+                    sweetSwarm.remove(this); // remove the resource from Sweet Swarm window
+                    sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                    sweetSwarm.resources.remove(this);
+                }
+                break;
+            }
         }
     }
+
 }

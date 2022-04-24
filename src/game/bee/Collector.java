@@ -22,12 +22,4 @@ public class Collector extends Bee {
 
     }
 
-    @Override
-    public void controller(SweetSwarm sweetSwarm) {
-        switch(this.getStatus()){
-            case "looking" -> {this.nearestResource(sweetSwarm);}
-            case "collecting" -> {this.moveToCenter(sweetSwarm);}
-            case "attacking" -> {this.attackResponse(sweetSwarm);}
-        }
-    }
 }
