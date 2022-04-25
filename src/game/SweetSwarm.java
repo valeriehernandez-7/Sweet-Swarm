@@ -291,8 +291,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void beeGenerator() {
-        //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
-        int beesAmount = 2;
+        //int beesAmount = getRandomInteger(15, 31); // 14 < x < 31
+        int beesAmount = 15;
         for (int i = 0; i < beesAmount; i++) {
             Point cell = positioning("Bee");
 //            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
@@ -363,8 +363,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             System.out.println("⬢\t⏰ TICK");
             timer.setDelay(speed); // timer speed
             // start simulation
-
             for (Bee bee : bees) {
+                System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
+                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
                 bee.controller(this);
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
