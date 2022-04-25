@@ -67,18 +67,26 @@ public class Honeycomb {
     public Point[] getNeighbors(Point origin) {
         // calc possible cells
         Point[] cells;
-        cells = new Point[]{
-                origin, // [R][C]
-                new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-                new Point((origin.x - 1), origin.y), // [R-1][C]
-                new Point(origin.x, (origin.y - 1)), // [R][C-1]
-                new Point(origin.x, (origin.y + 1)), // [R][C+1]
-                new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-                new Point((origin.x + 1), origin.y) // [R+1][C]
-        };
-        if (origin.x % 2 == 0) {
-            cells[1].y = (origin.y + 1); // [R-1][C+1] *
-            cells[5].y = (origin.y + 1); // [R+1][C+1] *
+        if (origin.x % 2 != 0) {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] 🡬 *
+                    new Point((origin.x - 1), origin.y), // [R-1][C] 🡭
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1] 🡨
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1] 🡪
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] 🡯 *
+                    new Point((origin.x + 1), origin.y) // [R+1][C] 🡦
+            };
+        } else {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - 1), origin.y), // [R-1][C] 🡬
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] 🡭 *
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1] 🡨
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1] 🡪
+                    new Point((origin.x + 1), origin.y), // [R+1][C] 🡯
+                    new Point((origin.x + 1), (origin.y + 1)) // [R+1][C+1] 🡦 *
+            };
         }
         // sets to null those cells that do not exist in the map [honeycomb]
         for (int i = 0; i < cells.length; i++) {

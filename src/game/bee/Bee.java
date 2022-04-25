@@ -122,23 +122,19 @@ public abstract class Bee extends JLabel {
 
     protected Point getRoute(int row, int column, Honeycomb honeycomb) {
         Point bestCell = new Point();
-
         int cellRow = 0;
         int cellColumn = 0;
         if (row > 0) {
             cellRow = -1;
-        }
-        if (row < 0) {
+        } else if (row < 0) {
             cellRow = 1;
         }
         if (column < 0) {
             cellColumn = 1;
-        }
-        if (column > 0) {
+        } else if (column > 0) {
             cellColumn = -1;
         }
         bestCell.setLocation(getCell()[0] + cellRow, getCell()[1] + cellColumn);
-
         if (!honeycomb.getMap()[bestCell.x][bestCell.y].isAvailable()) {
             Point[] bestCellNeighbors = honeycomb.getNeighbors(bestCell);
             Point[] originCellNeighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]));
@@ -147,16 +143,19 @@ public abstract class Bee extends JLabel {
                     if (bestCellNeighbor == originCellNeighbor) {
                         bestCell.setLocation(bestCellNeighbor.x, bestCellNeighbor.y);
                     } else {
-                        Point neighborAvailable = honeycomb.getNeighborAvailable(originCellNeighbors[0]);
+                        Point neighborAvailable = honeycomb.getNeighborAvailable(bestCellNeighbors[0]);
                         if (neighborAvailable != null) {
                             bestCell = neighborAvailable;
                         } else {
                             bestCell.setLocation(originCellNeighbors[0]);
                         }
                     }
+                    break;
                 }
+                break;
             }
         }
+        System.out.println("BEST CELL R[" + bestCell.x + "] C[" + bestCell.y +"]");
         return bestCell;
     }
 
