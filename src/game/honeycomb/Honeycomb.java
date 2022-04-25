@@ -1,9 +1,10 @@
 package game.honeycomb;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  */
 public class Honeycomb {
@@ -64,6 +65,7 @@ public class Honeycomb {
     }
 
     public Point[] getNeighbors(Point origin) {
+        // calc possible cells
         Point[] cells;
         cells = new Point[]{
                 origin, // [R][C]
@@ -78,7 +80,33 @@ public class Honeycomb {
             cells[1].y = (origin.y + 1); // [R-1][C+1] *
             cells[5].y = (origin.y + 1); // [R+1][C+1] *
         }
+        // sets to null those cells that do not exist in the map [honeycomb]
+        for (int i = 0; i < cells.length; i++) {
+            if (cells[i].x < 0 || cells[i].x > 14 || cells[i].y < 0 || cells[i].y > 12) {
+                cells[i] = null;
+            }
+        }
+        // remove null cells
+        List<Point> cellsList = new ArrayList<>();
+        for (Point cell : cells) {
+            if (cell != null) {
+                cellsList.add(cell);
+            }
+        }
+        cells = cellsList.toArray(new Point[cellsList.size()]);
         return cells;
+    }
+
+    public boolean isNeighbor(Point origin, Point neighbor) {
+        Point[] cells = getNeighbors(origin);
+        boolean isNeighbor = false;
+        for (Point cell : cells) {
+            if (cell == neighbor) {
+                isNeighbor = true;
+                break;
+            }
+        }
+        return isNeighbor;
     }
 
     public boolean areNeighborsAvailable(Point origin) {
