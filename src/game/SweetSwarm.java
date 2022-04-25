@@ -199,10 +199,18 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void gameSetup() {
-        addBase(center); // base
+        disabledBase(); // while positioning
         addObjects(); // objects
         addBees(); // bees
+        addBase(center); // base
         addHoneycomb(); // honeycomb
+    }
+
+    private void disabledBase() {
+        Point[] cells = honeycomb.getNeighbors(center);
+        for (int i = 0; i < base.length; i++) {
+            honeycomb.getMap()[cells[i].x][cells[i].y].setAvailable(false);
+        }
     }
 
     private void addBase(Point origin) {

@@ -6,7 +6,6 @@ import game.object.Resource;
 
 import java.awt.Point;
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.List;
 
 /**

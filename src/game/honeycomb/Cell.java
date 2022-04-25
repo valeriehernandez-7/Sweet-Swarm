@@ -27,6 +27,10 @@ public class Cell extends JLabel {
         return available;
     }
 
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     @Override
     public void setLocation(int x, int y) {
         super.setLocation(x, y);
@@ -39,6 +43,6 @@ public class Cell extends JLabel {
 
     public void setEntity(String entity) {
         this.entity = entity;
-        this.available = (entity == "Cell");
+        setAvailable(entity == "Cell" || entity == "Base");
     }
 }
