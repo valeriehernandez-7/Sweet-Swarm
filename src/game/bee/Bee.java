@@ -87,16 +87,11 @@ public abstract class Bee extends JLabel {
             resource.setResistance(resource.getResistance() - 1);
             resource.updateStatus();
             if (resource.getResistance() == 0) {
+                sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
+                sweetSwarm.honeycomb.getMap()[resource.getCell()[0]][resource.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
                 setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
                 setStatus(getStates().get(3)); // status = collecting
-                // create new resource
-                try {
-                    Thread.sleep(750);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                resource.setResistance(2);
-                resource.updateStatus();
             }
         }
     }
@@ -113,18 +108,21 @@ public abstract class Bee extends JLabel {
             if (nearestResource != null) {
                 moveToCollect(nearestResource, sweetSwarm);
             }
+        } else {
+            moveToNextCell(getCell()[0], getCell()[1], sweetSwarm);
         }
     }
 
     protected Point detectEntity(Honeycomb honeycomb, String entity) {
         Point nearestObject = null;
         int range = 1;
-        while (nearestObject == null && range < 7) {
+        while (nearestObject == null && range < honeycomb.getMap().length) {
             Point[] neighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]), range);
             for (Point neighbor : neighbors) {
                 if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
                     nearestObject = neighbor;
-                    range = 7;
+                    System.out.println("⬢\tRANGE " + range);
+                    range = honeycomb.getMap().length;
                     break;
                 }
             }
@@ -200,7 +198,7 @@ public abstract class Bee extends JLabel {
         int column = getCell()[1] - sweetSwarm.center.y;
         if ((1 - Math.abs(row) == 0 & 1 - Math.abs(column) == 0) | (1 - Math.abs(row) == 0 & column == 0) | (row == 0 & 1 - Math.abs(column) == 0)) {
             setStatus(getStates().get(1));
-            sweetSwarm.score += sweetSwarm.resources.get(0).getPoints();
+            sweetSwarm.score += 100;
         } else {  // calc next position (cell)
             moveToNextCell(row, column, sweetSwarm);
         }
