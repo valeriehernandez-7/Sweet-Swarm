@@ -3,6 +3,8 @@ package game.bee;
 import game.SweetSwarm;
 import game.object.Threat;
 
+import java.awt.*;
+
 /**
  * @author <a href="https://github.com/Mariana612">Mariana Navarro Jiménez</a>
  */
@@ -19,7 +21,7 @@ public class Guard extends Bee {
     @Override
     public void attackResponse(SweetSwarm sweetSwarm) {
         for (Threat threat : sweetSwarm.threats) {
-            if (this.getCell() == threat.getCell()) {
+            if (this.getTarget() == new Point(threat.getCell()[0],threat.getCell()[1])) {
                 threat.setResistance(threat.getResistance() - this.getPower());
                 this.setHealth(this.getHealth() - threat.getPower());
                 if (threat.getResistance() == 0) {

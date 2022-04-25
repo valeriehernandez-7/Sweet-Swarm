@@ -259,6 +259,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
             honeycomb.getMap()[cell.x][cell.y].setEntity("Resource");
+            break;
         }
     }
 
@@ -274,34 +275,42 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
     private void objectGenerator() {
         // resources init
-        int resourcesAmount = getRandomInteger(3, 5); // 2 < x < 5
+        //int resourcesAmount = getRandomInteger(3, 5); // 2 < x < 5
+        int resourcesAmount = 1;
         for (int i = 0; i < resourcesAmount; i++) {
             resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
         }
-        // blocks init
-        int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
-        for (int i = 0; i < blocksAmount; i++) {
-            blockGenerator(positioning("Block"));
-        }
+//        // blocks init
+//        int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
+//        for (int i = 0; i < blocksAmount; i++) {
+//            blockGenerator(positioning("Block"));
+//        }
         // threats init
-        int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
+        //int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
+        int threatsAmount = 1;
         for (int i = 0; i < threatsAmount; i++) {
-            threatGenerator(positioning("Threat"));
+            threatGenerator(new Point(4,4));
+
+            //threatGenerator(positioning("Threat"));
         }
     }
 
     private void beeGenerator() {
         //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
-        int beesAmount = 2;
+        int beesAmount = 1;
         for (int i = 0; i < beesAmount; i++) {
             Point cell = positioning("Bee");
 //            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
-            switch (2) {
+            switch (3) {
                 case 1 -> {
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
                 case 2 -> {
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
+                }
+                case 3->{
+                    bees.add(i, new Guard(honeycomb.getMap()[12][10].getX(), honeycomb.getMap()[12][10].getY(), 12, 10));
+                    bees.add(i, new Collector(honeycomb.getMap()[4][3].getX(), honeycomb.getMap()[4][3].getY(), 4, 3));
                 }
             }
         }
@@ -366,6 +375,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 
             for (Bee bee : bees) {
                 bee.controller(this);
+                System.out.println("call");
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
                 if(bees.isEmpty()){break;}
