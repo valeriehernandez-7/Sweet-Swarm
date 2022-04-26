@@ -18,7 +18,7 @@ public abstract class Bee extends JLabel {
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
-    protected List<String> states = List.of("dead", "looking", "attacking", "collecting", "following"); // bee states
+    protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "following"); // bee states
 
     // getters and setters
 
@@ -64,7 +64,7 @@ public abstract class Bee extends JLabel {
         String source;
         int stateIndex = states.indexOf(beeStatus);
         if (stateIndex > 0 && stateIndex < 3) {
-            // looking for resource or attacking state
+            // looking for resource or reacting state
             source = "src/resources/img/__bee-" + getClass().getSimpleName() + "-0.png";
         } else if (stateIndex == 3) {
             // collecting the resource state
@@ -82,60 +82,7 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
-    protected void collect(Resource resource, SweetSwarm sweetSwarm) {
-        if (resource.getResistance() > 0) {
-            resource.setResistance(resource.getResistance() - 1);
-            resource.updateStatus();
-            if (resource.getResistance() == 0) {
-                sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
-                sweetSwarm.honeycomb.getMap()[resource.getCell()[0]][resource.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
-                setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
-                setStatus(getStates().get(3)); // status = collecting
-            }
-        }
-    }
-
-    protected void nearestResource(SweetSwarm sweetSwarm) {
-        Point nearestResourcePosition = detectEntity(sweetSwarm.honeycomb, "Resource");
-        if (nearestResourcePosition != null) {
-            Resource nearestResource = null;
-            for (Resource resource : sweetSwarm.resources) {
-                if (resource.getCell()[0] == nearestResourcePosition.x && resource.getCell()[1] == nearestResourcePosition.y) {
-                    nearestResource = resource;
-                }
-            }
-            if (nearestResource != null) {
-                moveToCollect(nearestResource, sweetSwarm);
-            }
-        } else {
-            moveToNextCell(getCell()[0], getCell()[1], sweetSwarm);
-        }
-    }
-
-    protected Point detectEntity(Honeycomb honeycomb, String entity) {
-        Point nearestObject = null;
-        int range = 1;
-        while (nearestObject == null && range < honeycomb.getMap().length) {
-            Point[] neighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]), range);
-            for (Point neighbor : neighbors) {
-                if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
-                    nearestObject = neighbor;
-                    System.out.println("⬢\tRANGE " + range);
-                    range = honeycomb.getMap().length;
-                    break;
-                }
-            }
-            range++;
-        }
-        if (nearestObject != null) {
-            System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
-        } else {
-            System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
-        }
-        return nearestObject;
-    }
-
+    //---------------------- En of Getters and Setters ----------------------------------------------------------------
     protected Point getRoute(int row, int column, Honeycomb honeycomb) {
         Point bestCell = new Point();
         int cellRow = 0;
@@ -174,6 +121,82 @@ public abstract class Bee extends JLabel {
         return bestCell;
     }
 
+    protected void collect(Resource resource, SweetSwarm sweetSwarm) {
+        if (resource.getResistance() > 0) {
+            resource.setResistance(resource.getResistance() - 1);
+            resource.updateStatus();
+            if (resource.getResistance() == 0) {
+                sweetSwarm.remove(resource); // remove the resource from Sweet Swarm window
+                sweetSwarm.honeycomb.getMap()[resource.getCell()[0]][resource.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
+                sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
+                setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
+                setStatus(getStates().get(3)); // status = collecting
+            }
+        }
+    }
+
+    protected void lookForNearElements(SweetSwarm sweetSwarm){
+        Point entityPoint = detectNeighborEntity(sweetSwarm.honeycomb,"Threat");
+        //Point BeePoint = detectEntity(sweetSwarm.honeycomb,"Bee");
+        if(entityPoint!= null){
+            this.setStatus(this.getStates().get(2));
+            this.setTarget(entityPoint.x,entityPoint.y);
+        }
+        else{this.nearestResource(sweetSwarm);}
+    }
+
+    protected void nearestResource(SweetSwarm sweetSwarm) {
+        Point nearestResourcePosition = detectEntity(sweetSwarm.honeycomb, "Resource");
+        if (nearestResourcePosition != null) {
+            Resource nearestResource = null;
+            for (Resource resource : sweetSwarm.resources) {
+                if (resource.getCell()[0] == nearestResourcePosition.x && resource.getCell()[1] == nearestResourcePosition.y) {
+                    nearestResource = resource;
+                }
+            }
+            if (nearestResource != null) {
+                moveToCollect(nearestResource, sweetSwarm);
+            }
+        } else {
+            moveToNextCell(getCell()[0], getCell()[1], sweetSwarm);
+        }
+    }
+
+    protected Point detectNeighborEntity(Honeycomb honeycomb, String entity) {
+        Point[] neighborList = honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));
+        Point nearestEntity = null;
+        for(Point neighbor : neighborList){
+            if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity){
+                nearestEntity = neighbor;
+            }
+        }
+        return nearestEntity;
+
+    }
+
+    protected Point detectEntity(Honeycomb honeycomb, String entity) {
+        Point nearestObject = null;
+        int range = 1;
+        while (nearestObject == null && range < honeycomb.getMap().length) {
+            Point[] neighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]), range);
+            for (Point neighbor : neighbors) {
+                if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
+                    nearestObject = neighbor;
+                    System.out.println("⬢\tRANGE " + range);
+                    range = honeycomb.getMap().length;
+                    break;
+                }
+            }
+            range++;
+        }
+        if (nearestObject != null) {
+            System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
+        } else {
+            System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
+        }
+        return nearestObject;
+    }
+
     protected void moveToNextCell(int row, int column, SweetSwarm sweetSwarm) {
         Point nextCell = getRoute(row, column, sweetSwarm.honeycomb);
         sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].setEntity("Cell");
@@ -208,9 +231,9 @@ public abstract class Bee extends JLabel {
 
     public void controller(SweetSwarm sweetSwarm) {
         switch (this.getStatus()) {
-            case "looking" -> this.nearestResource(sweetSwarm);
+            case "looking" -> this.lookForNearElements(sweetSwarm);
             case "collecting" -> this.moveToCenter(sweetSwarm);
-            case "attacking" -> this.attackResponse(sweetSwarm);
+            case "reacting" -> this.attackResponse(sweetSwarm);
         }
     }
 

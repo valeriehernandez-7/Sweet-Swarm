@@ -27,9 +27,10 @@ public class Collector extends Bee {
                 this.setHealth(this.getHealth() - threat.getPower());
                 System.out.println(this.getHealth());
                 if(this.getHealth()==0){
-                    sweetSwarm.remove(this); // remove threat from Sweet Swarm window
+                    //sweetSwarm.remove(this); // remove threat from Sweet Swarm window
                     sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
                     sweetSwarm.bees.remove(this);
+                    this.setStatus(this.getStates().get(1));
                     break;
                 }
                 Point[] neighborsList = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));

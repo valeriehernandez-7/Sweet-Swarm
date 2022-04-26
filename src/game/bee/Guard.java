@@ -20,8 +20,9 @@ public class Guard extends Bee {
 
     @Override
     public void attackResponse(SweetSwarm sweetSwarm) {
+        System.out.println("Attacking");
         for (Threat threat : sweetSwarm.threats) {
-            if (this.getTarget() == new Point(threat.getCell()[0],threat.getCell()[1])) {
+            if (this.getTarget().equals(new Point(threat.getCell()[0], threat.getCell()[1]))) {
                 threat.setResistance(threat.getResistance() - this.getPower());
                 this.setHealth(this.getHealth() - threat.getPower());
                 if (threat.getResistance() == 0) {
@@ -31,9 +32,11 @@ public class Guard extends Bee {
                     this.setStatus(this.getStates().get(1));
                 }
                 if (this.getHealth() == 0) {
-                    sweetSwarm.remove(this); // remove bee from Sweet Swarm window
+                    //sweetSwarm.bees.remove(this);
                     sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                    sweetSwarm.bees.remove(this);
+                    sweetSwarm.remove(this); // remove bee from Sweet Swarm window
+                    this.setStatus(this.getStates().get(0));
+
                 }
                 break;
             }

@@ -252,7 +252,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (Point cell : cells) {
             resources.add(new Resource(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
             honeycomb.getMap()[cell.x][cell.y].setEntity("Resource");
-            break;
         }
     }
 
@@ -289,9 +288,8 @@ public class SweetSwarm extends JFrame implements ActionListener {
     private void threatPositioning() {
         int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
         for (int i = 0; i < threatsAmount; i++) {
-            threatGenerator(new Point(4,4));
-
-            //threatGenerator(positioning("Threat"));
+            //threatGenerator(new Point(4,4));
+            threatGenerator(positioning("Threat"));
         }
         for (Threat threat : threats) {
             getContentPane().add(threat); // display threat
@@ -304,7 +302,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         for (int i = 0; i < beesAmount; i++) {
             Point cell = positioning("Bee");
 //            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
-            switch (3) {
+            switch (2) {
                 case 1 -> {
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
@@ -376,10 +374,10 @@ public class SweetSwarm extends JFrame implements ActionListener {
             timer.setDelay(speed); // timer speed
             // start simulation
             for (Bee bee : bees) {
-                System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
-                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
+                //System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
+                //System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
                 bee.controller(this);
-                System.out.println("call");
+                //System.out.println("call");
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
                 if(bees.isEmpty()){break;}
