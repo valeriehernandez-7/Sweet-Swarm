@@ -373,22 +373,27 @@ public class SweetSwarm extends JFrame implements ActionListener {
             System.out.println("⬢\t⏰ TICK");
             timer.setDelay(speed); // timer speed
             // start simulation
-            try {
             for (Bee bee : bees) {
-                //System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
-                //System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
+                System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
+//                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
                 bee.controller(this);
                 if(bee.getStatus().equals(bee.getStates().get(4))){
                     bee.setStatus(bee.getStates().get(1));
-                    Thread.sleep(250);
+                    try {
+                        Thread.sleep(750);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     bee.controller(this);
                 }
-                //System.out.println("call");
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
-
                 if(bees.isEmpty()){break;}
-                Thread.sleep(500);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 //                if (resources.isEmpty() || threats.isEmpty()) { // restore resources || threats -> visualization issue
 //                    disabledBase(false);
 //                    if (resources.isEmpty()) {
@@ -411,9 +416,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
 //                    }
 //                    repaint();
 //                }
-            }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
             // end simulation
             bees.removeIf(bee -> bee.getStatus().equals(bee.getStates().get(0)));
