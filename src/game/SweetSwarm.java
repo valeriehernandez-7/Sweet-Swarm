@@ -166,7 +166,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-    private int getRandomInteger(int origin, int bound) {
+    public int getRandomInteger(int origin, int bound) {
         return (int) ((Math.random() * (bound - origin)) + origin);
     }
 
