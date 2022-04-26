@@ -410,6 +410,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
 //                }
             }
             // end simulation
+            bees.removeIf(bee -> bee.getStatus().equals(bee.getStates().get(0)));
             try {
                 Thread.sleep(speed);
             } catch (InterruptedException e) {
