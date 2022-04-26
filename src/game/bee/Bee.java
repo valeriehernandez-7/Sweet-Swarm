@@ -19,9 +19,20 @@ public abstract class Bee extends JLabel {
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
     protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "competing"); // bee states
+
+    //Change behaviour
     boolean wasTraspased=false;
+    boolean collecting = false;
 
     // getters and setters
+
+    public boolean isCollecting() {
+        return collecting;
+    }
+
+    public void setCollecting(boolean collecting) {
+        this.collecting = collecting;
+    }
 
     public int[] getCell() {
         return cell;
@@ -136,26 +147,43 @@ public abstract class Bee extends JLabel {
     }
 
     protected void lookForNearElements(SweetSwarm sweetSwarm,boolean collecting){
+        Resource resourcePoint = detectNeighborResource(sweetSwarm,"Resource");
         Point entityPoint = detectNeighborEntity(sweetSwarm,"Threat");
         Point beePoint = detectNeighborEntity(sweetSwarm,"Bee");
-        if(entityPoint!= null){
-            this.setStatus(this.getStates().get(2));
-            this.setTarget(entityPoint.x,entityPoint.y);
-        }
-        
-//        if(beePoint!=null){
-//            for(Bee bee: sweetSwarm.bees){
-//                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){
-//                    //if(bee.getStatus().equals(bee.getStates().get(2))){this.setTarget(bee.getTarget().x,bee.getTarget().y);this.setStatus(this.getStates().get(2));System.out.println("Guard x Attack");this.controller(sweetSwarm);break;} //Guard x Attack
-//                    if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(1)))){this.setStatus(this.getStates().get(4));System.out.println("Looking x Looking");break;} //Looking x Looking
-//                    if((this.getStatus().equals(this.getStates().get(3))) & (bee.getStatus().equals(bee.getStates().get(3)))){ this.setStatus(this.getStates().get(4));System.out.println("Collecting x Collecting");break; } //Collecting x Collecting
-//                    //if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(3)))){if(!this.wasTraspased){this.setStatus(this.getStates().get(3));bee.setStatus(this.getStates().get(1));System.out.println("Looking x Collecting");wasTraspased=true; break;}break;} //Looking x Collecting
-//                }
-//
-//            }
-//            if(collecting){this.moveToCenter(sweetSwarm);}
-//            else{this.nearestResource(sweetSwarm);}
+//        if(entityPoint!= null){
+//            this.setStatus(this.getStates().get(2));
+//            this.setTarget(entityPoint.x,entityPoint.y);
 //        }
+        if((resourcePoint!=null) & (!this.getStatus().equals(this.getStates().get(3)))){
+            this.setCollecting(true);
+            this.collect(resourcePoint,sweetSwarm);
+        }
+        else if(beePoint!=null){
+            for(Bee bee: sweetSwarm.bees){
+                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){
+                    //if(bee.getStatus().equals(bee.getStates().get(2))){this.setTarget(bee.getTarget().x,bee.getTarget().y);this.setStatus(this.getStates().get(2));System.out.println("Guard x Attack");this.controller(sweetSwarm);break;} //Guard x Attack
+                    if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(1)))){ //Looking x Looking
+                        this.setStatus(this.getStates().get(4));
+                        System.out.println("Looking x Looking");
+                        break;}
+                    if((this.getStatus().equals(this.getStates().get(3))) & (bee.getStatus().equals(bee.getStates().get(3)))){ //Collecting x Collecting
+                        this.setStatus(this.getStates().get(4));
+                        System.out.println("Collecting x Collecting");
+                        break; }
+                    if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(3)))){ //Looking x Collecting
+                        if(!this.wasTraspased){
+                            this.setStatus(this.getStates().get(3));
+                            bee.setStatus(this.getStates().get(1));
+                            System.out.println("Looking x Collecting");
+                            wasTraspased=true;
+                            break;}
+                        break;}
+                }
+
+            }
+            if(collecting){this.moveToCenter(sweetSwarm);}
+            else{this.randomMovement(sweetSwarm);}
+        }
 
         else{if(collecting){this.moveToCenter(sweetSwarm);} else{this.randomMovement(sweetSwarm);}}
     }
@@ -170,6 +198,22 @@ public abstract class Bee extends JLabel {
         }
         return nearestEntity;
 
+    }
+
+    protected Resource detectNeighborResource(SweetSwarm sweetSwarm, String entity) {
+        Point[] neighborList = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));
+        Point nearestEntity = null;
+        for(Point neighbor : neighborList){
+            if (sweetSwarm.honeycomb.getMap()[neighbor.x][neighbor.y].getEntity().equals(entity)){
+                for(Resource resource: sweetSwarm.resources){
+                    if(new Point (resource.getCell()[0],resource.getCell()[1]).equals(neighbor)){
+                        return resource;
+                    }
+                }
+
+            }
+        }
+        return null;
     }
 
     protected  void randomMovement(SweetSwarm sweetSwarm){
@@ -215,6 +259,8 @@ public abstract class Bee extends JLabel {
         int column = getCell()[1] - sweetSwarm.center.y;
         if ((1 - Math.abs(row) == 0 & 1 - Math.abs(column) == 0) | (1 - Math.abs(row) == 0 & column == 0) | (row == 0 & 1 - Math.abs(column) == 0)) {
             setStatus(getStates().get(1));
+            setCollecting(false);
+            this.wasTraspased=false;
             sweetSwarm.score += 100;
         } else {  // calc next position (cell)
             moveToNextCell(row, column, sweetSwarm);
@@ -227,14 +273,14 @@ public abstract class Bee extends JLabel {
         switch (this.getStatus()) {
             //case "looking" -> this.nearestResource(sweetSwarm);
             case "looking" -> this.lookForNearElements(sweetSwarm,false);
-            case "collecting" -> this.moveToCenter(sweetSwarm);
+            case "collecting" -> this.lookForNearElements(sweetSwarm,true);
             case "reacting" -> this.attackResponse(sweetSwarm);
         }
     }
 
     public abstract void attackResponse(SweetSwarm sweetSwarm);
 
-
+    // no usar ji
     protected void nearestResource(SweetSwarm sweetSwarm) {
         Point nearestResourcePosition = detectEntity(sweetSwarm.honeycomb, "Resource");
         if (nearestResourcePosition != null) {
