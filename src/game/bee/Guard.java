@@ -20,7 +20,6 @@ public class Guard extends Bee {
 
     @Override
     public void attackResponse(SweetSwarm sweetSwarm) {
-        System.out.println("Attacking");
         for (Threat threat : sweetSwarm.threats) {
             if (this.getTarget().equals(new Point(threat.getCell()[0], threat.getCell()[1]))) {
                 threat.setResistance(threat.getResistance() - this.getPower());

@@ -18,7 +18,8 @@ public abstract class Bee extends JLabel {
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
-    protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "following"); // bee states
+    protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "competing"); // bee states
+    boolean wasTraspased=false;
 
     // getters and setters
 
@@ -63,7 +64,7 @@ public abstract class Bee extends JLabel {
     public void setStatus(String beeStatus) {
         String source;
         int stateIndex = states.indexOf(beeStatus);
-        if (stateIndex > 0 && stateIndex < 3) {
+        if ((stateIndex > 0 && stateIndex < 3)|stateIndex==4) {
             // looking for resource or reacting state
             source = "src/resources/img/__bee-" + getClass().getSimpleName() + "-0.png";
         } else if (stateIndex == 3) {
@@ -135,14 +136,40 @@ public abstract class Bee extends JLabel {
         }
     }
 
-    protected void lookForNearElements(SweetSwarm sweetSwarm){
-        Point entityPoint = detectNeighborEntity(sweetSwarm.honeycomb,"Threat");
-        //Point BeePoint = detectEntity(sweetSwarm.honeycomb,"Bee");
+    protected void lookForNearElements(SweetSwarm sweetSwarm,boolean collecting){
+        Point entityPoint = detectNeighborEntity(sweetSwarm,"Threat");
+        Point beePoint = detectNeighborEntity(sweetSwarm,"Bee");
         if(entityPoint!= null){
             this.setStatus(this.getStates().get(2));
             this.setTarget(entityPoint.x,entityPoint.y);
         }
-        else{this.nearestResource(sweetSwarm);}
+        else if(beePoint!=null){
+            for(Bee bee: sweetSwarm.bees){
+                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){
+                    if(bee.getStatus().equals(bee.getStates().get(2))){this.setTarget(bee.getTarget().x,bee.getTarget().y);this.setStatus(this.getStates().get(2));System.out.println("Guard x Attack");this.controller(sweetSwarm);break;} //Guard x Attack
+                    if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(1)))){this.setStatus(this.getStates().get(4));System.out.println("Looking x Looking");break;} //Looking x Looking
+                    if((this.getStatus().equals(this.getStates().get(3))) & (bee.getStatus().equals(bee.getStates().get(3)))){ this.setStatus(this.getStates().get(4));System.out.println("Collecting x Collecting");break; } //Collecting x Collecting
+                    if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(3)))){if(!this.wasTraspased){this.setStatus(this.getStates().get(3));bee.setStatus(this.getStates().get(1));System.out.println("Looking x Collecting");wasTraspased=true; break;}break;} //Looking x Collecting
+                }
+
+            }
+            if(collecting){this.moveToCenter(sweetSwarm);}
+            else{this.nearestResource(sweetSwarm);}
+        }
+
+        else{if(collecting){this.moveToCenter(sweetSwarm);} else{this.nearestResource(sweetSwarm);}}
+    }
+
+    protected Point detectNeighborEntity(SweetSwarm sweetSwarm, String entity) {
+        Point[] neighborList = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));
+        Point nearestEntity = null;
+        for(Point neighbor : neighborList){
+            if (sweetSwarm.honeycomb.getMap()[neighbor.x][neighbor.y].getEntity().equals(entity)){
+                nearestEntity = neighbor;
+            }
+        }
+        return nearestEntity;
+
     }
 
     protected void nearestResource(SweetSwarm sweetSwarm) {
@@ -162,18 +189,6 @@ public abstract class Bee extends JLabel {
         }
     }
 
-    protected Point detectNeighborEntity(Honeycomb honeycomb, String entity) {
-        Point[] neighborList = honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));
-        Point nearestEntity = null;
-        for(Point neighbor : neighborList){
-            if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity){
-                nearestEntity = neighbor;
-            }
-        }
-        return nearestEntity;
-
-    }
-
     protected Point detectEntity(Honeycomb honeycomb, String entity) {
         Point nearestObject = null;
         int range = 1;
@@ -182,7 +197,7 @@ public abstract class Bee extends JLabel {
             for (Point neighbor : neighbors) {
                 if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
                     nearestObject = neighbor;
-                    System.out.println("⬢\tRANGE " + range);
+                    //System.out.println("⬢\tRANGE " + range);
                     range = honeycomb.getMap().length;
                     break;
                 }
@@ -190,9 +205,9 @@ public abstract class Bee extends JLabel {
             range++;
         }
         if (nearestObject != null) {
-            System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
+            //System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
         } else {
-            System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
+            //System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
         }
         return nearestObject;
     }
@@ -213,7 +228,7 @@ public abstract class Bee extends JLabel {
             moveToNextCell(row, column, sweetSwarm);
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
-        System.out.println("⬢\tMOVE TO R[" + getCell()[0] + "] C[" + getCell()[1] + "]");
+        //System.out.println("⬢\tMOVE TO R[" + getCell()[0] + "] C[" + getCell()[1] + "]");
     }
 
     protected void moveToCenter(SweetSwarm sweetSwarm) {
@@ -226,13 +241,13 @@ public abstract class Bee extends JLabel {
             moveToNextCell(row, column, sweetSwarm);
         }
         setLocation(sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getX(), sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].getY());
-        System.out.println("⬢\tMOVE TO R[" + getCell()[0] + "] C[" + getCell()[1] + "]");
+        //System.out.println("⬢\tMOVE TO R[" + getCell()[0] + "] C[" + getCell()[1] + "]");
     }
 
     public void controller(SweetSwarm sweetSwarm) {
         switch (this.getStatus()) {
-            case "looking" -> this.lookForNearElements(sweetSwarm);
-            case "collecting" -> this.moveToCenter(sweetSwarm);
+            case "looking" -> this.lookForNearElements(sweetSwarm,false);
+            case "collecting" -> this.lookForNearElements(sweetSwarm,true);
             case "reacting" -> this.attackResponse(sweetSwarm);
         }
     }
