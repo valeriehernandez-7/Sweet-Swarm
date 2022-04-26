@@ -1,9 +1,10 @@
 package game.honeycomb;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- *
  * @author <a href="https://github.com/valeriehernandez-7">Valerie M. Hernández Fernández</a>
  */
 public class Honeycomb {
@@ -64,21 +65,86 @@ public class Honeycomb {
     }
 
     public Point[] getNeighbors(Point origin) {
+        // calc possible cells
         Point[] cells;
-        cells = new Point[]{
-                origin, // [R][C]
-                new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] *
-                new Point((origin.x - 1), origin.y), // [R-1][C]
-                new Point(origin.x, (origin.y - 1)), // [R][C-1]
-                new Point(origin.x, (origin.y + 1)), // [R][C+1]
-                new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] *
-                new Point((origin.x + 1), origin.y) // [R+1][C]
-        };
-        if (origin.x % 2 == 0) {
-            cells[1].y = (origin.y + 1); // [R-1][C+1] *
-            cells[5].y = (origin.y + 1); // [R+1][C+1] *
+        if (origin.x % 2 != 0) {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - 1), (origin.y - 1)), // [R-1][C-1] 🡬 *
+                    new Point((origin.x - 1), origin.y), // [R-1][C] 🡭
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1] 🡨
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1] 🡪
+                    new Point((origin.x + 1), (origin.y - 1)), // [R+1][C-1] 🡯 *
+                    new Point((origin.x + 1), origin.y) // [R+1][C] 🡦
+            };
+        } else {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - 1), origin.y), // [R-1][C] 🡬
+                    new Point((origin.x - 1), (origin.y + 1)), // [R-1][C+1] 🡭 *
+                    new Point(origin.x, (origin.y - 1)), // [R][C-1] 🡨
+                    new Point(origin.x, (origin.y + 1)), // [R][C+1] 🡪
+                    new Point((origin.x + 1), origin.y), // [R+1][C] 🡯
+                    new Point((origin.x + 1), (origin.y + 1)) // [R+1][C+1] 🡦 *
+            };
         }
-        return cells;
+        return removeEmptyNeighbors(cells);
+    }
+
+    public Point[] getNeighbors(Point origin, int range) {
+        // calc possible cells
+        Point[] cells;
+        if (origin.x % 2 != 0) {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - range), (origin.y - range)), // [R-range][C-range] 🡬 *
+                    new Point((origin.x - range), origin.y), // [R-range][C] 🡭
+                    new Point(origin.x, (origin.y - range)), // [R][C-range] 🡨
+                    new Point(origin.x, (origin.y + range)), // [R][C+range] 🡪
+                    new Point((origin.x + range), (origin.y - range)), // [R+range][C-range] 🡯 *
+                    new Point((origin.x + range), origin.y) // [R+range][C] 🡦
+            };
+        } else {
+            cells = new Point[]{
+                    origin, // [R][C] ⬢
+                    new Point((origin.x - range), origin.y), // [R-range][C] 🡬
+                    new Point((origin.x - range), (origin.y + range)), // [R-range][C+range] 🡭 *
+                    new Point(origin.x, (origin.y - range)), // [R][C-range] 🡨
+                    new Point(origin.x, (origin.y + range)), // [R][C+range] 🡪
+                    new Point((origin.x + range), origin.y), // [R+range][C] 🡯
+                    new Point((origin.x + range), (origin.y + range)) // [R+range][C+range] 🡦 *
+            };
+        }
+        return removeEmptyNeighbors(cells);
+    }
+
+    public Point[] removeEmptyNeighbors(Point[] neighbors) {
+        // sets to null those cells that do not exist in the map [honeycomb]
+        for (int i = 0; i < neighbors.length; i++) {
+            if (neighbors[i].x < 0 || neighbors[i].x > 14 || neighbors[i].y < 0 || neighbors[i].y > 12) {
+                neighbors[i] = null;
+            }
+        }
+        // remove null cells
+        List<Point> cellsList = new ArrayList<>();
+        for (Point cell : neighbors) {
+            if (cell != null) {
+                cellsList.add(cell);
+            }
+        }
+        return cellsList.toArray(new Point[cellsList.size()]);
+    }
+
+    public boolean isNeighbor(Point origin, Point neighbor) {
+        Point[] cells = getNeighbors(origin);
+        boolean isNeighbor = false;
+        for (Point cell : cells) {
+            if (cell == neighbor) {
+                isNeighbor = true;
+                break;
+            }
+        }
+        return isNeighbor;
     }
 
     public boolean areNeighborsAvailable(Point origin) {

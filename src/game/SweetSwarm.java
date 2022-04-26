@@ -199,17 +199,17 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void gameSetup() {
-        disabledBase(); // while positioning
+        setBaseEnabled(false); // while positioning
         addObjects(); // objects
         addBees(); // bees
         addBase(center); // base
         addHoneycomb(); // honeycomb
     }
 
-    private void disabledBase() {
+    private void setBaseEnabled(boolean enabled) {
         Point[] cells = honeycomb.getNeighbors(center);
         for (int i = 0; i < base.length; i++) {
-            honeycomb.getMap()[cells[i].x][cells[i].y].setAvailable(false);
+            honeycomb.getMap()[cells[i].x][cells[i].y].setAvailable(enabled);
         }
     }
 
@@ -225,16 +225,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void addObjects() {
-        objectGenerator(); // create objects
-        for (Resource resource : resources) { // display resources
-            getContentPane().add(resource);
-        }
-        for (Block block : blocks) {
-            getContentPane().add(block); // display block
-        }
-        for (Threat threat : threats) {
-            getContentPane().add(threat); // display threat
-        }
+        resourcePositioning();
+        blockPositioning();
+        threatPositioning();
     }
 
     private void addBees() {
@@ -263,9 +256,29 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    private void resourcePositioning() {
+        int resourcesAmount = getRandomInteger(1, 4); // 0 < x < 4
+        for (int i = 0; i < resourcesAmount; i++) {
+            resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
+        }
+        for (Resource resource : resources) { // display resources
+            getContentPane().add(resource);
+        }
+    }
+
     private void blockGenerator(Point cell) {
         blocks.add(new Block(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
         honeycomb.getMap()[cell.x][cell.y].setEntity("Block");
+    }
+
+    private void blockPositioning() {
+        int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
+        for (int i = 0; i < blocksAmount; i++) {
+            blockGenerator(positioning("Block"));
+        }
+        for (Block block : blocks) {
+            getContentPane().add(block); // display block
+        }
     }
 
     private void threatGenerator(Point cell) {
@@ -273,31 +286,21 @@ public class SweetSwarm extends JFrame implements ActionListener {
         honeycomb.getMap()[cell.x][cell.y].setEntity("Threat");
     }
 
-    private void objectGenerator() {
-        // resources init
-        //int resourcesAmount = getRandomInteger(3, 5); // 2 < x < 5
-        int resourcesAmount = 1;
-        for (int i = 0; i < resourcesAmount; i++) {
-            resourceGenerator(positioning(new Point(3, 9), new Point(3, 9), "Resource"));
-        }
-//        // blocks init
-//        int blocksAmount = getRandomInteger(4, 9); // 3 < x < 9
-//        for (int i = 0; i < blocksAmount; i++) {
-//            blockGenerator(positioning("Block"));
-//        }
-        // threats init
-        //int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
-        int threatsAmount = 1;
+    private void threatPositioning() {
+        int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
         for (int i = 0; i < threatsAmount; i++) {
             threatGenerator(new Point(4,4));
 
             //threatGenerator(positioning("Threat"));
         }
+        for (Threat threat : threats) {
+            getContentPane().add(threat); // display threat
+        }
     }
 
     private void beeGenerator() {
-        //int beesAmount = getRandomInteger(30, 50); // 29 < x < 50
-        int beesAmount = 1;
+        //int beesAmount = getRandomInteger(15, 31); // 14 < x < 31
+        int beesAmount = 15;
         for (int i = 0; i < beesAmount; i++) {
             Point cell = positioning("Bee");
 //            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
@@ -316,7 +319,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
-    public boolean findGuards() {
+    private boolean findGuards() {
         boolean exists = false;
         for (Bee bee : bees) {
             if (bee.getClass().getSimpleName().equals("Guard")) {
@@ -372,8 +375,9 @@ public class SweetSwarm extends JFrame implements ActionListener {
             System.out.println("⬢\t⏰ TICK");
             timer.setDelay(speed); // timer speed
             // start simulation
-
             for (Bee bee : bees) {
+                System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
+                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
                 bee.controller(this);
                 System.out.println("call");
                 scoreLbl.setText(String.valueOf(score));
@@ -384,6 +388,28 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+//                if (resources.isEmpty() || threats.isEmpty()) { // restore resources || threats -> visualization issue
+//                    disabledBase(false);
+//                    if (resources.isEmpty()) {
+//                        resourcePositioning();
+//                    }
+//                    if (threats.isEmpty()) {
+//                        threatPositioning();
+//                    }
+//                    disabledBase(true);
+//                    for (Bee beeLabel : bees) {
+//                        getContentPane().add(beeLabel); // display bee
+//                    }
+//                    for (JLabel baseLabel: base) {
+//                        getContentPane().add(baseLabel); // display base
+//                    }
+//                    for (Cell[] container : honeycomb.getMap()) {
+//                        for (Cell cellLabel : container) {
+//                            getContentPane().add(cellLabel); // display cell
+//                        }
+//                    }
+//                    repaint();
+//                }
             }
             // end simulation
             try {
