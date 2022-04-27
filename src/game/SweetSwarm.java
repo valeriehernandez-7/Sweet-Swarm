@@ -265,6 +265,32 @@ public class SweetSwarm extends JFrame implements ActionListener {
         }
     }
 
+    public void respawnResources(SweetSwarm sweetSwarm, Resource resource) { // respawn of new resources ner neighbors
+        try {
+            Thread.sleep(speed);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (Resource res : sweetSwarm.resources) {
+            Point[] resourceNeighbors = sweetSwarm.honeycomb.getNeighbors(new Point(res.getCell()[0], res.getCell()[1]));
+            boolean foundPlace = false;
+            for (Point neighbors : resourceNeighbors) {
+                if (sweetSwarm.honeycomb.getMap()[neighbors.x][neighbors.y].isAvailable()) {
+                    sweetSwarm.honeycomb.getMap()[neighbors.x][neighbors.y].setEntity("Resource");
+                    resource.setCell(neighbors.x, neighbors.y);
+                    resource.setLocation(sweetSwarm.honeycomb.getMap()[neighbors.x][neighbors.y].getX(), sweetSwarm.honeycomb.getMap()[neighbors.x][neighbors.y].getY());
+                    resource.setResistance(2);
+                    resource.updateStatus();
+                    foundPlace = true;
+                    break;
+                }
+            }
+            if (foundPlace) {
+                break;
+            }
+        }
+    }
+
     private void blockGenerator(Point cell) {
         blocks.add(new Block(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
         honeycomb.getMap()[cell.x][cell.y].setEntity("Block");
@@ -286,7 +312,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
     }
 
     private void threatPositioning() {
-        int threatsAmount = getRandomInteger(4, 9); // 3 < x < 9
+        int threatsAmount = getRandomInteger(4, 15); // 3 < x < 9
         for (int i = 0; i < threatsAmount; i++) {
             //threatGenerator(new Point(4,4));
             threatGenerator(positioning("Threat"));
@@ -308,10 +334,6 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 case 2 -> {
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
-//                case 3->{
-//                    bees.add(i, new Guard(honeycomb.getMap()[12][10].getX(), honeycomb.getMap()[12][10].getY(), 12, 10));
-//                    bees.add(i, new Collector(honeycomb.getMap()[4][3].getX(), honeycomb.getMap()[4][3].getY(), 4, 3));
-//                }
             }
         }
     }
@@ -369,18 +391,21 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 gameOver();
                 break;
             }
-            System.out.println("⬢\t⏰ TICK");
-            timer.setDelay(speed); // timer speed
+            System.out.println("\n⬢\t⏰ TICK");
             // start simulation
             for (Bee bee : bees) {
-                System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
-                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
+                timer.setDelay(speed); // timer speed
+                System.out.println("\n⬢⬢⬢\t\uD83D\uDC1D " + bee.getClass().getSimpleName().toUpperCase() + " BEE " + bees.indexOf(bee) + "\t⬢⬢⬢");
+                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] + "]");
                 bee.controller(this);
-                if(bee.getStatus().equals(bee.getStates().get(4))){
-                    if(bee.isCollecting()){bee.setStatus(bee.getStates().get(3));}
-                    else{bee.setStatus(bee.getStates().get(1));}
+                if (bee.getStatus().equals(bee.getStates().get(4))) {
+                    if (bee.isCollecting()) {
+                        bee.setStatus(bee.getStates().get(3));
+                    } else {
+                        bee.setStatus(bee.getStates().get(1));
+                    }
                     try {
-                        Thread.sleep(this.speed);
+                        Thread.sleep(speed);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -388,25 +413,25 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 }
                 scoreLbl.setText(String.valueOf(score));
                 repaint();
-                if(bees.isEmpty()){break;}
+                if (bees.isEmpty()) {
+                    break;
+                }
                 try {
-                    Thread.sleep(this.speed);
+                    Thread.sleep(speed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
-            for (Threat threat : threats){
-                System.out.println("Threat " + threats.indexOf(threat));
+            for (Threat threat : threats) {
                 threat.attackBee(this);
                 try {
-                    Thread.sleep(this.speed);
+                    Thread.sleep(speed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
             // end simulation
-            bees.removeIf(bee -> bee.getStatus().equals(bee.getStates().get(0)));
+            bees.removeIf(bee -> bee.getStatus().equals(bee.getStates().get(0))); // remove dead bees
             try {
                 Thread.sleep(speed);
             } catch (InterruptedException e) {
