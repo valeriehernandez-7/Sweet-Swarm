@@ -17,13 +17,23 @@ public class Guard extends Bee {
         this.setLocation(xPosition, yPosition);
         this.setStatus(this.getStates().get(1));
     }
+    private  boolean isNeighbor(SweetSwarm sweetSwarm){
+        Point[] originNeighbors = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0], this.getCell()[1]));
+        for (Point neighbors : originNeighbors) {
+            if (this.getTarget().equals(neighbors)) {
+                return true;
+            }
+        }
+        return  false;
+    }
 
     @Override
     public void attackResponse(SweetSwarm sweetSwarm) {
-        boolean isNeighbor = sweetSwarm.honeycomb.isNeighbor(new Point(this.getCell()[0], this.getCell()[1]),this.getTarget());
+        boolean isNeighbor = isNeighbor(sweetSwarm);
+
         if (!isNeighbor) {
             this.moveToNextCell(sweetSwarm);
-            isNeighbor = sweetSwarm.honeycomb.isNeighbor(new Point(this.getCell()[0], this.getCell()[1]),this.getTarget());
+            isNeighbor = isNeighbor(sweetSwarm);
         }
         if (isNeighbor) {
             for (Threat threat : sweetSwarm.threats) {
@@ -33,10 +43,10 @@ public class Guard extends Bee {
                     } else {
                         setReacting(false);
                     }
+                    System.out.println(threat.getResistance());
                     if (threat.getResistance() <= 0) {
-                        sweetSwarm.remove(threat); // remove threat from Sweet Swarm window
                         sweetSwarm.honeycomb.getMap()[threat.getCell()[0]][threat.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                        sweetSwarm.threats.remove(threat);
+                        sweetSwarm.respawnThreats(sweetSwarm,threat);
                         sweetSwarm.repaint();
                         System.out.println("⬢\tDESTROYED THREAT " + sweetSwarm.threats.indexOf(threat));
                         if (this.isCollecting()) {

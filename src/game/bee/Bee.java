@@ -152,6 +152,7 @@ public abstract class Bee extends JLabel {
         Point entityPoint = detectNeighborEntity(sweetSwarm, "Threat");
         Point beePoint = detectNeighborEntity(sweetSwarm, "Bee");
         if (entityPoint != null) {
+            System.out.println("⬢\t\uD83D\uDC1D  BEE " + sweetSwarm.bees.indexOf(this) + " IS ATTACKING" );
             setStatus(getStates().get(2));
             setTarget(entityPoint.x, entityPoint.y);
         } else if ((resourcePoint != null) & (!getStatus().equals(getStates().get(3)))) {

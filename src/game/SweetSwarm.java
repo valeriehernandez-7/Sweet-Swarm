@@ -311,6 +311,19 @@ public class SweetSwarm extends JFrame implements ActionListener {
         honeycomb.getMap()[cell.x][cell.y].setEntity("Threat");
     }
 
+    public void respawnThreats(SweetSwarm sweetSwarm, Threat threat) { // respawn of new resources ner neighbors
+        try {
+            Thread.sleep(speed+50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Point newPosition = positioning("Threat");
+        threat.setCell(newPosition.x, newPosition.y);
+        threat.setResistance(10);
+        threat.setLocation(sweetSwarm.honeycomb.getMap()[newPosition.x][newPosition.y].getX(), sweetSwarm.honeycomb.getMap()[newPosition.x][newPosition.y].getY());
+        threat.setBounds(threat.getLocation().x, threat.getLocation().y, threat.getIcon().getIconWidth(), threat.getIcon().getIconHeight());
+    }
+
     private void threatPositioning() {
         int threatsAmount = getRandomInteger(4, 15); // 3 < x < 9
         for (int i = 0; i < threatsAmount; i++) {
