@@ -374,7 +374,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
             // start simulation
             for (Bee bee : bees) {
                 System.out.println("\t\uD83D\uDC1D BEE " + bees.indexOf(bee));
-//                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
+                System.out.println("⬢\tPOSITION R[" + bee.getCell()[0] + "] C[" + bee.getCell()[1] +"]");
                 bee.controller(this);
                 if(bee.getStatus().equals(bee.getStates().get(4))){
                     if(bee.isCollecting()){bee.setStatus(bee.getStates().get(3));}
