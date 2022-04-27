@@ -150,11 +150,11 @@ public abstract class Bee extends JLabel {
         Resource resourcePoint = detectNeighborResource(sweetSwarm,"Resource");
         Point entityPoint = detectNeighborEntity(sweetSwarm,"Threat");
         Point beePoint = detectNeighborEntity(sweetSwarm,"Bee");
-//        if(entityPoint!= null){
-//            this.setStatus(this.getStates().get(2));
-//            this.setTarget(entityPoint.x,entityPoint.y);
-//        }
-        if((resourcePoint!=null) & (!this.getStatus().equals(this.getStates().get(3)))){
+        if(entityPoint!= null){
+            this.setStatus(this.getStates().get(2));
+            this.setTarget(entityPoint.x,entityPoint.y);
+        }
+        else if((resourcePoint!=null) & (!this.getStatus().equals(this.getStates().get(3)))){
             this.setCollecting(true);
             this.collect(resourcePoint,sweetSwarm);
         }
@@ -278,55 +278,57 @@ public abstract class Bee extends JLabel {
         }
     }
 
-    public abstract void attackResponse(SweetSwarm sweetSwarm);
-
-    // no usar ji
-    protected void nearestResource(SweetSwarm sweetSwarm) {
-        Point nearestResourcePosition = detectEntity(sweetSwarm.honeycomb, "Resource");
-        if (nearestResourcePosition != null) {
-            Resource nearestResource = null;
-            for (Resource resource : sweetSwarm.resources) {
-                if (resource.getCell()[0] == nearestResourcePosition.x && resource.getCell()[1] == nearestResourcePosition.y) {
-                    nearestResource = resource;
-                }
-            }
-            if (nearestResource != null) {
-                moveToCollect(nearestResource, sweetSwarm);
-            }
-        } else {
-            moveToNextCell(getCell()[0], getCell()[1], sweetSwarm);
-        }
-    }
-
-    protected Point detectEntity(Honeycomb honeycomb, String entity) {
-        Point nearestObject = null;
-        int range = 1;
-        while (nearestObject == null && range < honeycomb.getMap().length) {
-            Point[] neighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]), range);
-            for (Point neighbor : neighbors) {
-                if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
-                    nearestObject = neighbor;
-                    //System.out.println("⬢\tRANGE " + range);
-                    range = honeycomb.getMap().length;
-                    break;
-                }
-            }
-            range++;
-        }
-        if (nearestObject != null) {
-            //System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
-        } else {
-            //System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
-        }
-        return nearestObject;
-    }
-
     protected void moveToNextCell(int row, int column, SweetSwarm sweetSwarm) {
         Point nextCell = getRoute(row, column, sweetSwarm.honeycomb);
         sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].setEntity("Cell");
         setCell(nextCell.x, nextCell.y);
         sweetSwarm.honeycomb.getMap()[getCell()[0]][getCell()[1]].setEntity("Bee");
     }
+
+    public abstract void attackResponse(SweetSwarm sweetSwarm);
+
+    // no usar ji
+//    protected void nearestResource(SweetSwarm sweetSwarm) {
+//        Point nearestResourcePosition = detectEntity(sweetSwarm.honeycomb, "Resource");
+//        if (nearestResourcePosition != null) {
+//            Resource nearestResource = null;
+//            for (Resource resource : sweetSwarm.resources) {
+//                if (resource.getCell()[0] == nearestResourcePosition.x && resource.getCell()[1] == nearestResourcePosition.y) {
+//                    nearestResource = resource;
+//                }
+//            }
+//            if (nearestResource != null) {
+//                moveToCollect(nearestResource, sweetSwarm);
+//            }
+//        } else {
+//            moveToNextCell(getCell()[0], getCell()[1], sweetSwarm);
+//        }
+//    }
+//
+//    protected Point detectEntity(Honeycomb honeycomb, String entity) {
+//        Point nearestObject = null;
+//        int range = 1;
+//        while (nearestObject == null && range < honeycomb.getMap().length) {
+//            Point[] neighbors = honeycomb.getNeighbors(new Point(getCell()[0], getCell()[1]), range);
+//            for (Point neighbor : neighbors) {
+//                if (honeycomb.getMap()[neighbor.x][neighbor.y].getEntity() == entity) {
+//                    nearestObject = neighbor;
+//                    //System.out.println("⬢\tRANGE " + range);
+//                    range = honeycomb.getMap().length;
+//                    break;
+//                }
+//            }
+//            range++;
+//        }
+//        if (nearestObject != null) {
+//            //System.out.println("⬢\tNEAREST " + entity.toUpperCase() + " R[" + nearestObject.x + "] C[" + nearestObject.y + "]");
+//        } else {
+//            //System.out.println("⬢\tTHERE IS NO " + entity.toUpperCase() + " IN RANGE");
+//        }
+//        return nearestObject;
+//    }
+
+
 }
 
 
