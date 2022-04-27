@@ -23,16 +23,6 @@ public class Collector extends Bee {
     public void attackResponse(SweetSwarm sweetSwarm) {
         for(Threat threat: sweetSwarm.threats){
             if (this.getTarget().equals(new Point(threat.getCell()[0], threat.getCell()[1]))) {
-                if(!isReacting()) {this.setHealth(this.getHealth() - threat.getPower());}
-                else{setReacting(false);}
-
-                if(this.getHealth()<=0){
-                    System.out.println("Dead Collector"+this.isCollecting());
-                    sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                    this.setStatus(this.getStates().get(0));
-                    sweetSwarm.remove(this);
-                    break;
-                }
                 Point[] neighborsList = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0],this.getCell()[1]));
 
 

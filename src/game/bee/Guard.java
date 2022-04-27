@@ -40,11 +40,10 @@ public class Guard extends Bee {
             for (Threat threat : sweetSwarm.threats) {
                 if (this.getTarget().equals(new Point(threat.getCell()[0], threat.getCell()[1]))) {
                     if(!isReacting()) {
-                        this.setHealth(this.getHealth() - threat.getPower());
                         threat.setResistance(threat.getResistance() - this.getPower());}
                     else{setReacting(false);}
 
-                    if (threat.getResistance() == 0) {
+                    if (threat.getResistance() <= 0) {
                         sweetSwarm.remove(threat); // remove threat from Sweet Swarm window
                         sweetSwarm.honeycomb.getMap()[threat.getCell()[0]][threat.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
                         sweetSwarm.threats.remove(threat);
@@ -54,13 +53,7 @@ public class Guard extends Bee {
                             this.setStatus(this.getStates().get(1));
                         }
                     }
-                    if (this.getHealth() == 0) {
-                        System.out.println("Dead Guard "+this.isCollecting());
-                        sweetSwarm.honeycomb.getMap()[this.getCell()[0]][this.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available
-                        sweetSwarm.remove(this); // remove bee from Sweet Swarm window
-                        this.setStatus(this.getStates().get(0));
 
-                    }
                     break;
                 }
             }
