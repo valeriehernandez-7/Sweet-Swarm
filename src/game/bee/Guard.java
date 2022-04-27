@@ -39,8 +39,11 @@ public class Guard extends Bee {
         if (isNeighbor) {
             for (Threat threat : sweetSwarm.threats) {
                 if (this.getTarget().equals(new Point(threat.getCell()[0], threat.getCell()[1]))) {
-                    threat.setResistance(threat.getResistance() - this.getPower());
-                    this.setHealth(this.getHealth() - threat.getPower());
+                    if(!isReacting()) {
+                        this.setHealth(this.getHealth() - threat.getPower());
+                        threat.setResistance(threat.getResistance() - this.getPower());}
+                    else{setReacting(false);}
+
                     if (threat.getResistance() == 0) {
                         sweetSwarm.remove(threat); // remove threat from Sweet Swarm window
                         sweetSwarm.honeycomb.getMap()[threat.getCell()[0]][threat.getCell()[1]].setEntity("Cell"); // set the Honeycomb Cell available

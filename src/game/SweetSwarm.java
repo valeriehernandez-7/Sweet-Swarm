@@ -380,7 +380,7 @@ public class SweetSwarm extends JFrame implements ActionListener {
                     if(bee.isCollecting()){bee.setStatus(bee.getStates().get(3));}
                     else{bee.setStatus(bee.getStates().get(1));}
                     try {
-                        Thread.sleep(750);
+                        Thread.sleep(this.speed);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -390,32 +390,11 @@ public class SweetSwarm extends JFrame implements ActionListener {
                 repaint();
                 if(bees.isEmpty()){break;}
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(this.speed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-//                if (resources.isEmpty() || threats.isEmpty()) { // restore resources || threats -> visualization issue
-//                    disabledBase(false);
-//                    if (resources.isEmpty()) {
-//                        resourcePositioning();
-//                    }
-//                    if (threats.isEmpty()) {
-//                        threatPositioning();
-//                    }
-//                    disabledBase(true);
-//                    for (Bee beeLabel : bees) {
-//                        getContentPane().add(beeLabel); // display bee
-//                    }
-//                    for (JLabel baseLabel: base) {
-//                        getContentPane().add(baseLabel); // display base
-//                    }
-//                    for (Cell[] container : honeycomb.getMap()) {
-//                        for (Cell cellLabel : container) {
-//                            getContentPane().add(cellLabel); // display cell
-//                        }
-//                    }
-//                    repaint();
-//                }
+
             }
             // end simulation
             bees.removeIf(bee -> bee.getStatus().equals(bee.getStates().get(0)));

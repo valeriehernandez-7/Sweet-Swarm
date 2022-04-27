@@ -23,8 +23,17 @@ public abstract class Bee extends JLabel {
     //Change behaviour
     boolean wasTraspased=false; //if flower was given by another bee
     boolean collecting = false; //if bee was collecting before change of State
+    boolean reacting = false;
 
     //---------------------- Start of Getters and Setters --------------------------------------------------------------
+
+    public boolean isReacting() {
+        return reacting;
+    }
+
+    public void setReacting(boolean reacting) {
+        this.reacting = reacting;
+    }
 
     public boolean isCollecting() {
         return collecting;
@@ -75,10 +84,10 @@ public abstract class Bee extends JLabel {
     public void setStatus(String beeStatus) {
         String source;
         int stateIndex = states.indexOf(beeStatus);
-        if ((stateIndex > 0 && stateIndex < 3)|stateIndex==4|stateIndex==5) {
+        if ((stateIndex > 0 && stateIndex < 3)|(stateIndex==4&!this.isCollecting())|(stateIndex==5&!this.isCollecting())) {
             // looking for resource or reacting state
             source = "src/resources/img/__bee-" + getClass().getSimpleName() + "-0.png";
-        } else if (stateIndex == 3) {
+        } else if (stateIndex == 3| (stateIndex==4&this.isCollecting()) | (stateIndex==5&this.isCollecting())) {
             // collecting the resource state
             source = "src/resources/img/__bee-" + getClass().getSimpleName() + "-1.png";
         } else {
@@ -195,12 +204,14 @@ public abstract class Bee extends JLabel {
                     if(bee.getStatus().equals(bee.getStates().get(5))){
                         this.setTarget(bee.getTarget().x,bee.getTarget().y);
                         this.setStatus(this.getStates().get(2));
+                        this.setReacting(true);
                         System.out.println("Agnet x Running");
                         this.controller(sweetSwarm);
                     }
                     if(bee.getStatus().equals(bee.getStates().get(2))){//Guard x Attack
                         this.setTarget(bee.getTarget().x,bee.getTarget().y);
                         this.setStatus(this.getStates().get(2));
+                        this.setReacting(true);
                         System.out.println("Agent x Attack");
                         this.controller(sweetSwarm);
                         break;}
@@ -216,6 +227,7 @@ public abstract class Bee extends JLabel {
                         if(!this.wasTraspased){
                             this.setStatus(this.getStates().get(3));
                             bee.setStatus(this.getStates().get(1));
+                            bee.setCollecting(false);
                             System.out.println("Looking x Collecting");
                             wasTraspased=true;
                             break;}
