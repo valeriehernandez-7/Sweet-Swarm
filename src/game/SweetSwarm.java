@@ -301,18 +301,17 @@ public class SweetSwarm extends JFrame implements ActionListener {
         int beesAmount = 15;
         for (int i = 0; i < beesAmount; i++) {
             Point cell = positioning("Bee");
-//            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
-            switch (2) {
+            switch (getRandomInteger(1, 3)) {  // 0 < x < 3
                 case 1 -> {
                     bees.add(i, new Collector(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
                 case 2 -> {
                     bees.add(i, new Guard(honeycomb.getMap()[cell.x][cell.y].getX(), honeycomb.getMap()[cell.x][cell.y].getY(), cell.x, cell.y));
                 }
-                case 3->{
-                    bees.add(i, new Guard(honeycomb.getMap()[12][10].getX(), honeycomb.getMap()[12][10].getY(), 12, 10));
-                    bees.add(i, new Collector(honeycomb.getMap()[4][3].getX(), honeycomb.getMap()[4][3].getY(), 4, 3));
-                }
+//                case 3->{
+//                    bees.add(i, new Guard(honeycomb.getMap()[12][10].getX(), honeycomb.getMap()[12][10].getY(), 12, 10));
+//                    bees.add(i, new Collector(honeycomb.getMap()[4][3].getX(), honeycomb.getMap()[4][3].getY(), 4, 3));
+//                }
             }
         }
     }

@@ -18,24 +18,22 @@ public class Guard extends Bee {
         this.setStatus(this.getStates().get(1));
     }
 
-    @Override
-    public void attackResponse(SweetSwarm sweetSwarm) {
+    private  boolean isNeighbor(SweetSwarm sweetSwarm){
         Point[] originNeighbors = sweetSwarm.honeycomb.getNeighbors(new Point(this.getCell()[0], this.getCell()[1]));
-        boolean isNeighbor = false;
         for (Point neighbors : originNeighbors) {
-            System.out.println("----Start-----");
-            System.out.println("----Original Point: "+new Point(this.getCell()[0],this.getCell()[1])+" -----");
-            System.out.println(this.getTarget());
-            System.out.println(neighbors);
-            System.out.println("----End-----");
             if (this.getTarget().equals(neighbors)) {
-                isNeighbor = true;
-                break;
+                return true;
             }
         }
+        return  false;
+    }
+    @Override
+    public void attackResponse(SweetSwarm sweetSwarm) {
+        boolean isNeighbor = isNeighbor(sweetSwarm);
+
         if(!isNeighbor){
-            //this.moveToCollect(this.getTarget(),sweetSwarm);
-            System.out.println("NO PASO AA");
+            this.randomMovement(sweetSwarm);
+            isNeighbor = isNeighbor(sweetSwarm);
         }
 
         if (isNeighbor) {
@@ -64,5 +62,10 @@ public class Guard extends Bee {
                 }
             }
         }
+        else{if (this.isCollecting()) {
+            this.setStatus(this.getStates().get(3));
+        } else {
+            this.setStatus(this.getStates().get(1));
+        }}
     }
 }

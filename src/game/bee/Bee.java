@@ -142,6 +142,7 @@ public abstract class Bee extends JLabel {
                 sweetSwarm.resources.remove(resource); // remove the resource from Sweet Swarm objects list
                 setTarget(sweetSwarm.base[0].getX(), sweetSwarm.base[0].getY()); // move to honeycomb base main cell (center) SweetWarm.base[0]
                 setStatus(getStates().get(3)); // status = collecting
+                this.setCollecting(true);
             }
         }
     }
@@ -155,13 +156,17 @@ public abstract class Bee extends JLabel {
             this.setTarget(entityPoint.x,entityPoint.y);
         }
         else if((resourcePoint!=null) & (!this.getStatus().equals(this.getStates().get(3)))){
-            this.setCollecting(true);
             this.collect(resourcePoint,sweetSwarm);
         }
         else if(beePoint!=null){
             for(Bee bee: sweetSwarm.bees){
-                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){
-                    //if(bee.getStatus().equals(bee.getStates().get(2))){this.setTarget(bee.getTarget().x,bee.getTarget().y);this.setStatus(this.getStates().get(2));System.out.println("Guard x Attack");this.controller(sweetSwarm);break;} //Guard x Attack
+                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){ //Guard x Attack
+                    if(bee.getStatus().equals(bee.getStates().get(2))){
+                        this.setTarget(bee.getTarget().x,bee.getTarget().y);
+                        this.setStatus(this.getStates().get(2));
+                        System.out.println("Guard x Attack");
+                        this.controller(sweetSwarm);
+                        break;}
                     if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(1)))){ //Looking x Looking
                         this.setStatus(this.getStates().get(4));
                         System.out.println("Looking x Looking");
