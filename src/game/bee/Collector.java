@@ -41,7 +41,7 @@ public class Collector extends Bee {
                         this.setCell(neighbor.x, neighbor.y);
                         sweetSwarm.honeycomb.getMap()[neighbor.x][neighbor.y].setEntity("Bee");
                         this.setLocation(sweetSwarm.honeycomb.getMap()[neighbor.x][neighbor.y].getX(),sweetSwarm.honeycomb.getMap()[neighbor.x][neighbor.y].getY());
-                        this.setStatus(this.getStates().get(1));
+                        this.setStatus(this.getStates().get(5));
                         break;
                     }
                 }

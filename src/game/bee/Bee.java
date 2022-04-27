@@ -18,10 +18,11 @@ public abstract class Bee extends JLabel {
     protected int power; // bee power
     protected Point target = new Point(); // bee destination
     protected String status; // bee status
-    protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "competing"); // bee states
+    protected List<String> states = List.of("dead", "looking", "reacting", "collecting", "competing","running"); // bee states
 
     //Change behaviour
     boolean wasTraspased=false;
+    boolean wasRunning=false;
     boolean collecting = false;
 
     // getters and setters
@@ -75,7 +76,7 @@ public abstract class Bee extends JLabel {
     public void setStatus(String beeStatus) {
         String source;
         int stateIndex = states.indexOf(beeStatus);
-        if ((stateIndex > 0 && stateIndex < 3)|stateIndex==4) {
+        if ((stateIndex > 0 && stateIndex < 3)|stateIndex==4|stateIndex==5) {
             // looking for resource or reacting state
             source = "src/resources/img/__bee-" + getClass().getSimpleName() + "-0.png";
         } else if (stateIndex == 3) {
@@ -94,7 +95,7 @@ public abstract class Bee extends JLabel {
         return states;
     }
 
-    //---------------------- En of Getters and Setters ----------------------------------------------------------------
+    //---------------------- End of Getters and Setters ----------------------------------------------------------------
     protected Point getRoute(int row, int column, Honeycomb honeycomb) {
         Point bestCell = new Point();
         int cellRow = 0;
@@ -160,11 +161,18 @@ public abstract class Bee extends JLabel {
         }
         else if(beePoint!=null){
             for(Bee bee: sweetSwarm.bees){
-                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){ //Guard x Attack
-                    if(bee.getStatus().equals(bee.getStates().get(2))){
+                if(new Point(bee.getCell()[0],bee.getCell()[1]).equals(beePoint)){ //Agent x Running
+                    System.out.println(bee.getStatus());
+                    if(bee.getStatus().equals(bee.getStates().get(5))){
                         this.setTarget(bee.getTarget().x,bee.getTarget().y);
                         this.setStatus(this.getStates().get(2));
-                        System.out.println("Guard x Attack");
+                        System.out.println("Agnet x Running");
+                        this.controller(sweetSwarm);
+                    }
+                    if(bee.getStatus().equals(bee.getStates().get(2))){//Guard x Attack
+                        this.setTarget(bee.getTarget().x,bee.getTarget().y);
+                        this.setStatus(this.getStates().get(2));
+                        System.out.println("Agent x Attack");
                         this.controller(sweetSwarm);
                         break;}
                     if((this.getStatus().equals(this.getStates().get(1))) & (bee.getStatus().equals(bee.getStates().get(1)))){ //Looking x Looking
@@ -280,6 +288,10 @@ public abstract class Bee extends JLabel {
             case "looking" -> this.lookForNearElements(sweetSwarm,false);
             case "collecting" -> this.lookForNearElements(sweetSwarm,true);
             case "reacting" -> this.attackResponse(sweetSwarm);
+            case "running" -> {
+                if(this.isCollecting()){this.setStatus(this.getStates().get(3));} else{this.setStatus(this.getStates().get(1));}
+                this.controller(sweetSwarm);
+            }
         }
     }
 
