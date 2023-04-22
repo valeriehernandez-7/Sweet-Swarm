@@ -24,5 +24,5 @@ Project
 I 2022
 
 ### Students
-- [Valerie M. Hernández Fernández](https://github.com/valeriehernandez-7) - 2020010829
-- [Mariana Navarro Jiménez ](https://github.com/Mariana612) - 2020103902
+- [Valerie M. Hernández Fernández](https://github.com/valeriehernandez-7)
+- [Mariana Navarro Jiménez ](https://github.com/Mariana612)
